@@ -1,7 +1,11 @@
-import { ArrowDownRight, Star, ArrowRight, Play, Sparkles } from "lucide-react";
+"use client";
+
+import { Users, Star, ArrowRight, Play, Award, Target } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import NeobruCard from "./ui/neobruCard";
+import { VercelCard } from "./ui/vercel-card";
 
 interface Hero3Props {
   heading?: string;
@@ -41,7 +45,7 @@ const Hero3 = ({
     },
   },
   reviews = {
-    count: 50,
+    count: 40,
     rating: 4.9,
     avatars: [
       {
@@ -81,7 +85,10 @@ const Hero3 = ({
           <div className="mb-8 flex w-fit flex-col items-center gap-4 sm:flex-row">
             <span className="inline-flex items-center -space-x-4">
               {reviews.avatars.map((avatar, index) => (
-                <Avatar key={index} className="size-12 border">
+                <Avatar
+                  key={index}
+                  className="size-12 border-2 transform transition-transform duration-200 hover:-translate-y-2 hover:scale-110"
+                >
                   <AvatarImage src={avatar.src} alt={avatar.alt} />
                 </Avatar>
               ))}
@@ -114,15 +121,52 @@ const Hero3 = ({
             </Button>
           </div>
         </div>
-        <div className="flex ">
-          <Image
-            src="/MessyDoodle.svg"
-            alt="placeholder hero"
-            width={1200}
-            height={800}
-            className="max-h-[600px] w-full rounded-md object-cover lg:max-h-[800px] filter invert"
-          />
-        </div>
+
+        <VercelCard glowEffect className=" overflow-hidden p-2">
+          <div className="flex relative ">
+            <NeobruCard
+              className="absolute top-0 right-0 md:right-12  transform-gpu transition-transform duration-300
+              rotate-12 hover:rotate-0 hover:scale-105"
+            >
+              <div className="flex items-start gap-0.5 md:gap-1.5 pr-2 md:pr-6 text-foreground">
+                <Award className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="text-xs font-semibold uppercase tracking-wider ">
+                  Projects
+                </span>
+              </div>
+              <p className="text-lg md:text-2xl font-bold text-foreground tabular-nums">
+                52+
+              </p>
+              <p className="text-xs text-foreground/50">Delivered</p>
+            </NeobruCard>
+            <NeobruCard
+              className="absolute bottom-4 left-4 md:left-20
+            transform-gpu transition-transform duration-300
+            -rotate-6 hover:rotate-0 hover:scale-105"
+            >
+              <div className="flex items-start gap-0.5 md:gap-1.5 pr-2 md:pr-6 text-foreground">
+                <Users
+                  className="h-3.5 w-3.5 text-primary"
+                  aria-hidden="true"
+                />
+                <span className="text-xs font-medium uppercase tracking-wider ">
+                  Clients
+                </span>
+              </div>
+              <p className="text-lg md:text-2xl font-bold text-foreground tabular-nums">
+                40+
+              </p>
+              <p className="text-xs text-foreground/50">Trusted Partners</p>
+            </NeobruCard>
+            <Image
+              src="/MessyDoodle.svg"
+              alt="placeholder hero"
+              width={1200}
+              height={800}
+              className="max-h-[600px] w-full rounded-md object-cover lg:max-h-[800px] filter dark:invert"
+            />
+          </div>
+        </VercelCard>
       </div>
     </section>
   );

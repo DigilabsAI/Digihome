@@ -21,6 +21,7 @@
   "registries": {
     "@shadcnblocks": "https://shadcnblocks.com/r/{name}.json",
     "@tailark": "https://tailark.com/r/{name}.json",
-    "@smoothui": "https://smoothui.dev/r/{name}.json"
+    "@smoothui": "https://smoothui.dev/r/{name}.json",
+    "@retroui": "https://retroui.dev/r/{name}.json"
   }
 }
