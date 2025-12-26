@@ -1,20 +1,71 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getAvatarUrl, getTestimonials } from "@smoothui/data";
 
-const testimonials = getTestimonials(7);
+type Testimonial = {
+  id?: string;
+  name: string;
+  role?: string;
+  content?: string;
+  avatar?: string;
+};
+
+function getAvatarUrl(seed?: string, size = 64) {
+  const name = seed || "User";
+  const s = encodeURIComponent(name);
+  return `https://ui-avatars.com/api/?name=${s}&size=${size}&background=0D9488&color=fff`;
+}
+
+function getTestimonials(count = 3): Testimonial[] {
+  const samples: Testimonial[] = [
+    {
+      name: "Ada Lovelace",
+      role: "Frontend Engineer",
+      content:
+        "SmoothUI made building beautiful UI components fast and enjoyable. The docs are clear and the components are flexible.",
+      avatar: "Ada Lovelace",
+    },
+    {
+      name: "Grace Hopper",
+      role: "Full Stack Developer",
+      content:
+        "I shaved hours off my development time using SmoothUI—components fit perfectly with our design system.",
+      avatar: "Grace Hopper",
+    },
+    {
+      name: "Linus Torvalds",
+      role: "Software Architect",
+      content:
+        "Stable, well-designed components that just work. Highly recommended for production apps.",
+      avatar: "Linus Torvalds",
+    },
+  ];
+
+  return Array.from({ length: count }, (_, i) => {
+    const base = samples[i % samples.length];
+    return {
+      ...base,
+      id: `${base.name.replace(/\s+/g, "-").toLowerCase()}-${i}`,
+    } as Testimonial;
+  });
+}
 
 export function TestimonialsGrid() {
+  const [mounted, setMounted] = useState(false);
+  const testimonials = useMemo(() => getTestimonials(7), []);
   const [active, setActive] = useState(0);
   const [autoplay] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const handleNext = useCallback(() => {
     setActive((prev) => (prev + 1) % testimonials.length);
-  }, []);
+  }, [testimonials.length]);
 
   const handlePrev = () => {
     setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length);
@@ -35,6 +86,7 @@ export function TestimonialsGrid() {
     <section>
       <div className="bg-muted min-h-auto py-24">
         <div className="container mx-auto w-full max-w-6xl px-6">
+          {!mounted ? null : (
           <motion.div
             className="mb-12"
             initial={{ opacity: 0, y: 20 }}
@@ -87,7 +139,7 @@ export function TestimonialsGrid() {
                   <AnimatePresence>
                     {testimonials.map((testimonial, index) => (
                       <motion.div
-                        key={testimonial.name}
+                        key={testimonial.id}
                         initial={{
                           opacity: 0,
                           scale: 0.9,
@@ -121,7 +173,7 @@ export function TestimonialsGrid() {
                               .split(" ")
                               .map((word, wordIndex) => (
                                 <motion.span
-                                  key={`${testimonial.name}-word-${wordIndex}`}
+                                  key={`${testimonial.id}-word-${wordIndex}`}
                                   initial={{
                                     filter: "blur(4px)",
                                     opacity: 0,
@@ -175,6 +227,7 @@ export function TestimonialsGrid() {
               </div>
             </div>
           </motion.div>
+          )}
         </div>
       </div>
     </section>
