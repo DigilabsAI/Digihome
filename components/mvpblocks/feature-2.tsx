@@ -66,7 +66,7 @@ export default function FeatureSteps({ workflow }: WorkflowProps) {
           {/* Left steps */}
           <motion.div
             whileInView={{ opacity: 1, x: 0 }}
-            initial={{ opacity: 0, x: 100 }}
+            initial={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
             viewport={{ once: true, amount: 0.5 }}
             className="order-2 space-y-8 md:order-2 relative"
@@ -118,7 +118,7 @@ export default function FeatureSteps({ workflow }: WorkflowProps) {
           {/* Right image card */}
           <MotionNeobruCard
             whileInView={{ opacity: 1, x: 0 }}
-            initial={{ opacity: 0, x: -100 }}
+            initial={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
             viewport={{ once: true, amount: 0.5 }}
             className={cn(
