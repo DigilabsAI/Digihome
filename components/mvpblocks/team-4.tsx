@@ -2,173 +2,85 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-  type Variants,
-} from "framer-motion";
-import { Card } from "../ui/card";
-import { Button } from "../ui/button";
-import NeobruCard from "../ui/neobruCard";
 import TeamMemberCard, { TeamMember } from "./team-member-card";
+import { VercelCard } from "../ui/vercel-card";
+import { Button } from "../ui/button";
+import { ArrowRight } from "lucide-react";
+import { Department } from "@/public/constants";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 
-type SocialMediaLinks = {
-  facebook?: string;
-  twitter?: string;
-  instagram?: string;
-  linkedin?: string;
-  github?: string;
-  website?: string;
-  email?: string;
-  dribbble?: string;
+const containerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.05,
+    },
+  },
+  exit: {
+    transition: {
+      staggerChildren: 0.05,
+      staggerDirection: -1,
+    },
+  },
 };
 
-type TeamMemberx = {
-  id: number;
-  name: string;
-  role: string;
-  email?: string;
-  bio?: string;
-  image: string;
-  backgroundColor?: string;
-  socialMedia?: SocialMediaLinks;
-  expertise?: string[];
-  department?: string;
+const itemVariants: Variants = {
+  hidden: { opacity: 0, x: 24 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.35, ease: "easeOut" },
+  },
+  exit: {
+    opacity: 0,
+    x: 24,
+    transition: { duration: 0.25, ease: "easeIn" },
+  },
 };
 
-type TeamSectionProps = {
+
+export interface ElegantTeamProps {
   title?: string;
   subtitle?: string;
-  teamMembers: TeamMember[];
+  teamMembers?: TeamMember[];
   backgroundColor?: string;
   textColor?: string;
   secondaryColor?: string;
   className?: string;
-};
-
-type Department =
-  | "all"
-  | "management"
-  | "product"
-  | "design"
-  | "marketing"
-  | "sales"
-  | "customer"
-  | "operations";
-
-export interface ElegantTeamProps extends TeamSectionProps {
-  departments?: Array<{
-    id: Department;
-    label: string;
-  }>;
+  departments?: { id: Department; label: string }[];
 }
 
-export const elegantTeamMembers: TeamMember[] = [
-  {
-    name: "Sarah Johnson",
-    role: "CEO & Founder",
-    bio: "Visionary leader with 15+ years in tech",
-    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
-    skills: ["Strategy", "Leadership", "Innovation"],
-    gradient: "from-white/10 via-white/5 to-transparent",
-    social: {
-      twitter: "#",
-      linkedin: "#",
-      github: "#",
-      email: "#",
-    },
-  },
-  {
-    name: "Michael Chen",
-    role: "CTO",
-    bio: "Full-stack architect and AI enthusiast",
-    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael",
-    skills: ["AI/ML", "Architecture", "Cloud"],
-    gradient: "from-white/12 via-white/5 to-transparent",
-    social: {
-      twitter: "#",
-      linkedin: "#",
-      github: "#",
-      email: "michael@example.com",
-    },
-  },
-  {
-    name: "Emily Rodriguez",
-    role: "Head of Design",
-    bio: "Creative mind behind beautiful interfaces",
-    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",
-    skills: ["UI/UX", "Branding", "Motion"],
-    gradient: "from-white/12 via-white/5 to-transparent",
-    social: {
-      twitter: "#",
-      linkedin: "#",
-      github: "#",
-      email: "emily@example.com",
-    },
-  },
-  {
-    name: "David Park",
-    department: "management",
-    role: "Lead Developer",
-    bio: "Code wizard and performance optimizer",
-    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=David",
-    skills: ["React", "TypeScript", "Performance"],
-    gradient: "from-foreground/12 via-foreground/5 to-transparent",
-    social: {
-      twitter: "#",
-      linkedin: "#",
-      github: "#",
-      email: "david@example.com",
-    },
-  },
-];
-
 export default function Team4({
-  title = "Meet the team that makes the magic happen",
-  subtitle = "Meet our diverse team of world-class creators, designers, and problem solvers.",
-  teamMembers = elegantTeamMembers,
+  title,
+  subtitle,
+  teamMembers,
   backgroundColor = "#ffffff",
   textColor = "#000000",
   secondaryColor = "#666666",
   className,
-  departments = [
-    { id: "all", label: "View all" },
-    { id: "management", label: "Management" },
-    { id: "product", label: "Product" },
-    { id: "design", label: "Design" },
-    { id: "marketing", label: "Marketing" },
-    { id: "sales", label: "Sales" },
-    { id: "customer", label: "Customer Success" },
-    { id: "operations", label: "Operations" },
-  ],
+  departments,
 }: ElegantTeamProps) {
-  const [activeDepartment, setActiveDepartment] = useState<Department>("all");
+  const [activeDepartment, setActiveDepartment] =
+    useState<Department>("management");
 
-  // Filter team members by department
-  const filteredTeamMembers =
-    activeDepartment === "all"
-      ? teamMembers
-      : teamMembers.filter(
-          (member) =>
-            member.department?.toLowerCase() === activeDepartment ||
-            member.role?.toLowerCase().includes(activeDepartment)
-        );
+  const filteredTeamMembers = teamMembers?.filter(
+    (member) =>
+      member.department?.toLowerCase() === activeDepartment ||
+      member.role?.toLowerCase().includes(activeDepartment)
+  );
 
-  // Split the title to apply italic styling to "magic"
-  const titleParts = title.split(/(magic)/);
+  const titleParts = title?.split(/(magic)/i);
 
   return (
     <section
       className={cn("w-full py-16", className)}
       style={{ backgroundColor, color: textColor }}
     >
-      <div className="container mx-auto max-w-6xl px-4">
-        <div className="mb-12 text-center">
+      <div className="container mx-auto max-w-6xl px-2">
+        <div className="mb-8 text-center">
           <h2 className="mb-4 font-serif text-4xl leading-tight md:text-5xl">
-            {titleParts.map((part, index) =>
+            {titleParts?.map((part, index) =>
               part.toLowerCase() === "magic" ? (
                 <span key={index} className="italic">
                   {part}
@@ -186,15 +98,15 @@ export default function Team4({
           </p>
         </div>
 
-        <div className="mb-12 flex flex-wrap justify-center gap-2">
-          {departments.map((dept) => (
+        <div className="mb-8 flex flex-wrap justify-center gap-2">
+          {departments?.map((dept) => (
             <button
               key={dept.id}
               onClick={() => setActiveDepartment(dept.id)}
               className={cn(
                 "rounded-none px-4 py-2 text-sm font-medium transition-colors",
                 activeDepartment === dept.id
-                  ? "bg-gray-900 text-white"
+                  ? "bg-secondary-foreground text-white"
                   : "border border-gray-200 bg-white text-gray-800 hover:bg-gray-100"
               )}
             >
@@ -203,32 +115,49 @@ export default function Team4({
           ))}
         </div>
 
-        <div className="grid grid-cols-1 place-items-stretch gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {filteredTeamMembers.map((member) => (
-            <TeamMemberCard key={member.name} member={member} />
-          ))}
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeDepartment}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="grid grid-cols-1 items-stretch justify-items-center gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+          >
+            {filteredTeamMembers?.map((member) => (
+              <motion.div key={member.name} variants={itemVariants}>
+                <TeamMemberCard member={member} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1, duration: 0.6 }}
-          className="mt-16 text-center"
+          className="mt-4 sm:mt-8 text-center"
         >
-          <Card className="inline-flex flex-col items-center gap-6 rounded-3xl border border-border/60 bg-card/80 px-10 py-8 shadow-[0_20px_70px_-30px_rgba(15,23,42,0.6)] backdrop-blur-xl">
-            <h3 className="text-2xl font-semibold">Join Our Amazing Team</h3>
-            <p className="max-w-xl text-sm text-[var(--muted-foreground)]">
+          <VercelCard className="mx-auto w-[318px] sm:w-auto flex flex-col items-center gap-8 sm:gap-12 border-2 border-black/[0.4] bg-card/80 px-6 sm:px-10 py-6 sm:py-8 sm:max-w-full overflow-hidden text-center shadow-lg shadow-muted/10 backdrop-blur-md">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+              Join Our Amazing Team
+            </h3>
+
+            <p className="text-sm sm:text-base md:text-lg text-secondary-foreground/80">
               We&apos;re always looking for talented people to join our mission
             </p>
+
             <Button
               size="lg"
-              className="group relative overflow-hidden rounded-full bg-primary px-10 py-6 text-primary-foreground shadow-lg shadow-primary/25 transition-transform duration-300 hover:translate-y-[-2px]"
+              className="group relative mt-2 sm:mt-4 w-full sm:w-80 md:w-96 rounded-none overflow-hidden border-[3px] border-black bg-black px-6 py-4 sm:py-6 text-base font-semibold uppercase text-white shadow-[5px_5px_0_#000] transition-all duration-200 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:bg-black/90 hover:border-black/90 hover:shadow-[7px_7px_0_#000] active:translate-x-[5px] active:translate-y-[5px] active:shadow-none"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/20 to-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <span className="relative font-medium">View Open Positions</span>
-              <span className="relative ml-2">→</span>
+              <span className="absolute inset-0 -left-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-all duration-500 group-hover:left-full" />
+              <span className="relative flex items-center justify-center gap-2">
+                View Open Positions
+                <ArrowRight className="h-4 w-4" />
+              </span>
             </Button>
-          </Card>
+          </VercelCard>
         </motion.div>
       </div>
     </section>

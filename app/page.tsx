@@ -3,30 +3,72 @@ import { Suspense } from "react";
 import { Hero3 } from "@/components/hero3";
 import Header2 from "@/components/mvpblocks/header-2";
 import Team4 from "@/components/mvpblocks/team-4";
-import { elegantTeamMembers } from "@/components/mvpblocks/team-4";
 import Footer from "@/components/footer";
 import FeatureSteps from "@/components/mvpblocks/feature-2";
 import ProjectSection from "@/components/uitripled/projectSection";
 import TestimonialsGrid from "@/components/testimonials-grid";
+import CTA2 from "@/components/mvpblocks/cta-2";
+import {
+  title,
+  subtitle,
+  departments,
+  heading,
+  description,
+  reviews,
+  workflow,
+  footerSections,
+  projects,
+  elegantTeamMembers,
+  totalClients,
+  totalProjects,
+} from "@/public/constants";
+
 export default function Home() {
-
   return (
-    <main className="min-h-screen flex flex-col items-center">
-      <div className="flex-1 w-full flex flex-col gap-20 items-center">
-        <div className="flex-1 flex flex-col gap-20 pt-10 max-w-7xl lg:p-5">
-          <main className="flex-1 flex flex-col gap-6 px-4">
-            <Header2 />
-            <Hero3 />
-            <ProjectSection />
-            <FeatureSteps/>
-             
-            <Team4 teamMembers={elegantTeamMembers} />
-            <TestimonialsGrid />
-            <Footer />
-          </main>
+    <main className="min-h-screen flex flex-col">
+      <section className="bg-background">
+        <div className="max-w-7xl mx-auto px-4 lg:px-5">
+          <Header2 />
+          <Hero3
+            heading={heading}
+            description={description}
+            reviews={reviews}
+            totalClients={totalClients}
+            totalProjects={totalProjects}
+          />
         </div>
+      </section>
 
-      </div>
+      <section className="bg-secondary py-10">
+        <div className="max-w-7xl mx-auto px-4 lg:px-5">
+          <FeatureSteps workflow={workflow} />
+          <ProjectSection projects={projects} />
+        </div>
+      </section>
+
+      <section className="bg-background">
+        <div className="max-w-7xl mx-auto px-4 lg:px-5">
+          <Team4
+            title={title}
+            subtitle={subtitle}
+            teamMembers={elegantTeamMembers}
+            departments={departments}
+          />
+        </div>
+      </section>
+
+      <section className="bg-secondary py-12">
+        <div className="max-w-7xl mx-auto px-4 lg:px-5">
+          <TestimonialsGrid />
+          <CTA2 />
+        </div>
+      </section>
+
+      <section className="bg-background">
+        <div className="max-w-7xl mx-auto px-4 lg:px-5">
+          <Footer FooterData={footerSections} />
+        </div>
+      </section>
     </main>
   );
 }

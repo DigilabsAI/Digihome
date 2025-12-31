@@ -1,64 +1,56 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Rocket, Code, Paintbrush } from "lucide-react";
-import NeobruCard from "../ui/neobruCard";
 import Image from "next/image";
+import { MotionNeobruCard } from "../ui/neobruCard";
+import { TextVariants } from "../uitripled/projectSection";
 
-const features = [
-  {
-    step: "Step 1",
-    title: "Build Faster",
-    content:
-      "Create your MVP in record time with our pre-built blocks and components.",
-    icon: <Rocket className="text-primary h-6 w-6" />,
-    image:
-      "communication.svg",
-  },
-  {
-    step: "Step 2",
-    title: "Customize Easily",
-    content:
-      "Tailor every component to your needs with our intuitive design system and flexible architecture.",
-    icon: <Paintbrush className="text-primary h-6 w-6" />,
-    image:
-      "team-idea.svg",
-  },
-  {
-    step: "Step 3",
-    title: "Deploy Confidently",
-    content:
-      "Launch your product with confidence using our optimized, responsive, and accessible components.",
-    icon: <Code className="text-primary h-6 w-6" />,
-    image:
-      "idea-launch.svg",
-  },
-];
+type WorkflowItem = {
+  title?: string;
+  content?: string;
+  image?: string;
+};
 
-export default function FeatureSteps() {
+interface WorkflowProps {
+  workflow: WorkflowItem[];
+}
+
+export default function FeatureSteps({ workflow }: WorkflowProps) {
   const [currentFeature, setCurrentFeature] = useState(0);
   const [progress, setProgress] = useState(0);
 
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: false, margin: "-100px" });
+
   useEffect(() => {
+    if (!inView || !workflow.length) return;
+
     const timer = setInterval(() => {
       if (progress < 100) {
-        setProgress((prev) => prev + 100 / (4000 / 100));
+        setProgress((prev) => prev + 100 / (4000 / 50)); // faster: 2s per slide
       } else {
-        setCurrentFeature((prev) => (prev + 1) % features.length);
+        setCurrentFeature((prev) => (prev + 1) % workflow.length);
         setProgress(0);
       }
-    }, 100);
+    }, 15);
 
     return () => clearInterval(timer);
-  }, [progress]);
+  }, [progress, inView, workflow.length]);
+
+  if (!workflow.length) return null;
 
   return (
-    <div className={"p-8 md:p-12"}>
+    <div ref={ref} className={cn("px-8 md:px-12")}>
       <div className="mx-auto w-full max-w-7xl">
-        <div className="relative mx-auto mb-12 max-w-2xl sm:text-center">
-          <div className="relative z-10">
+        <div className="relative mx-auto mb-8 max-w-2xl sm:text-center">
+          <motion.div
+           variants={TextVariants}
+            viewport={{ once: true, amount: 0.5 }}
+            whileInView="visible"
+            initial="hidden"
+          className="relative z-10">
             <h2 className="font-geist text-3xl font-bold tracking-tighter md:text-4xl lg:text-5xl">
               Build Your MVP in Three Steps
             </h2>
@@ -66,13 +58,20 @@ export default function FeatureSteps() {
               MVPBlocks helps you create, customize, and deploy your product
               faster than ever before.
             </p>
-          </div>
+          </motion.div>
         </div>
-        <hr className="bg-foreground/30 mx-auto mb-10 h-px w-1/2" />
+        <hr className="bg-foreground/30 mx-auto mb-8 h-px w-1/2" />
 
         <div className="flex flex-col justify-center gap-6 md:grid md:grid-cols-2 lg:gap-0 md:pl-12">
-          <div className="order-2 space-y-8 md:order-2 relative">
-            {features.map((feature, index) => {
+          {/* Left steps */}
+          <motion.div
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: 100 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="order-2 space-y-8 md:order-2 relative"
+          >
+            {workflow.map((work: WorkflowItem, index: number) => {
               const isActive = index === currentFeature;
 
               return (
@@ -104,26 +103,31 @@ export default function FeatureSteps() {
                   >
                     <div className="flex-1 relative z-10">
                       <h3 className="text-xl font-semibold md:text-2xl">
-                        {feature.title}
+                        {work.title}
                       </h3>
                       <p className="text-muted-foreground text-sm md:text-base">
-                        {feature.content}
+                        {work.content}
                       </p>
                     </div>
                   </motion.div>
                 </div>
               );
             })}
-          </div>
+          </motion.div>
 
-          <NeobruCard
+          {/* Right image card */}
+          <MotionNeobruCard
+            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            viewport={{ once: true, amount: 0.5 }}
             className={cn(
-              "border-primary  relative order-1 h-[200px] overflow-hidden border-2 md:order-1 md:h-[300px] lg:h-[400px]"
+              "border-primary relative order-1 h-[200px] overflow-hidden border-2 md:order-1 md:h-[300px] lg:h-[400px]"
             )}
           >
             <AnimatePresence mode="wait">
-              {features.map(
-                (feature, index) =>
+              {workflow.map(
+                (work: WorkflowItem, index: number) =>
                   index === currentFeature && (
                     <motion.div
                       key={index}
@@ -134,8 +138,8 @@ export default function FeatureSteps() {
                       transition={{ duration: 0.5, ease: "easeInOut" }}
                     >
                       <Image
-                        src={feature.image}
-                        alt={feature.title}
+                        src={work.image!}
+                        alt={work.title!}
                         className="h-full w-full transform object-contain transition-transform hover:scale-105"
                         width={1000}
                         height={500}
@@ -144,7 +148,7 @@ export default function FeatureSteps() {
                   )
               )}
             </AnimatePresence>
-          </NeobruCard>
+          </MotionNeobruCard>
         </div>
       </div>
     </div>

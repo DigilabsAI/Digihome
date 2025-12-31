@@ -33,10 +33,10 @@ export default function Header2() {
   }, []);
 
   const containerVariants = {
-    hidden: { opacity: 0, y: -20 },
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      y: 0,
+    
       transition: {
         duration: 0.6,
         staggerChildren: 0.1,
@@ -158,13 +158,6 @@ export default function Header2() {
               className="hidden items-center space-x-3 lg:flex"
               variants={itemVariants}
             >
-              <motion.button
-                className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-lg p-2 transition-colors duration-200"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Search className="h-5 w-5" />
-              </motion.button>
 
               <Link
                 prefetch={false}
