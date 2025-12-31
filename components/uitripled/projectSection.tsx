@@ -18,7 +18,7 @@ export const TextVariants: Variants = {
   },
 };
 
-const cardVariants = (delay = 0): Variants => ({
+export const cardVariants = (delay = 0): Variants => ({
   hidden: { opacity: 0, x: 20 },
   visible: {
     opacity: 1,
@@ -50,7 +50,7 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
         className="relative z-10 text-center"
       >
         <h2 className="font-geist text-3xl font-bold tracking-tighter md:text-4xl lg:text-5xl">
-          Our Latest Projects
+         Our latest work.
         </h2>
         <p className="mt-3 font-geist text-foreground/60">
           MVPBlocks helps you create, customize, and deploy your product faster

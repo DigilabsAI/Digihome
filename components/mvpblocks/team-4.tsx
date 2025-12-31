@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 import { Department } from "@/public/constants";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { TextVariants } from "../uitripled/projectSection";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -38,7 +39,6 @@ const itemVariants: Variants = {
     transition: { duration: 0.25, ease: "easeIn" },
   },
 };
-
 
 export interface ElegantTeamProps {
   title?: string;
@@ -78,7 +78,13 @@ export default function Team4({
       style={{ backgroundColor, color: textColor }}
     >
       <div className="container mx-auto max-w-6xl px-2">
-        <div className="mb-8 text-center">
+        <motion.div
+          variants={TextVariants}
+          viewport={{ once: true, amount: 0.5 }}
+          whileInView="visible"
+          initial="hidden"
+          className="mb-8 text-center"
+        >
           <h2 className="mb-4 font-serif text-4xl leading-tight md:text-5xl">
             {titleParts?.map((part, index) =>
               part.toLowerCase() === "magic" ? (
@@ -96,7 +102,7 @@ export default function Team4({
           >
             {subtitle}
           </p>
-        </div>
+        </motion.div>
 
         <div className="mb-8 flex flex-wrap justify-center gap-2">
           {departments?.map((dept) => (
@@ -117,6 +123,8 @@ export default function Team4({
 
         <AnimatePresence mode="wait">
           <motion.div
+            whileInView="visible"
+            // viewport={{ once: true, amount: 0.3 }}
             key={activeDepartment}
             variants={containerVariants}
             initial="hidden"
@@ -132,33 +140,39 @@ export default function Team4({
           </motion.div>
         </AnimatePresence>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.6 }}
-          className="mt-4 sm:mt-8 text-center"
-        >
-          <VercelCard className="mx-auto w-[318px] sm:w-auto flex flex-col items-center gap-8 sm:gap-12 border-2 border-black/[0.4] bg-card/80 px-6 sm:px-10 py-6 sm:py-8 sm:max-w-full overflow-hidden text-center shadow-lg shadow-muted/10 backdrop-blur-md">
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold">
-              Join Our Amazing Team
-            </h3>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeDepartment} // <- makes it re-animate when department changes
+            layout
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.4 }}
+            className="mt-4 sm:mt-8 text-center"
+          >
+            <VercelCard className="mx-auto w-[318px] sm:w-auto flex flex-col items-center gap-8 sm:gap-12 border-2 border-black/[0.4] bg-card/80 px-6 sm:px-10 py-6 sm:py-8 sm:max-w-full overflow-hidden text-center shadow-lg shadow-muted/10 backdrop-blur-md">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+               Join our growing team.
+              </h3>
 
-            <p className="text-sm sm:text-base md:text-lg text-secondary-foreground/80">
-              We&apos;re always looking for talented people to join our mission
-            </p>
+              <p className="text-sm sm:text-base md:text-lg text-secondary-foreground/80">
+                We&apos;re always looking for talented people to join our
+                mission
+              </p>
 
-            <Button
-              size="lg"
-              className="group relative mt-2 sm:mt-4 w-full sm:w-80 md:w-96 rounded-none overflow-hidden border-[3px] border-black bg-black px-6 py-4 sm:py-6 text-base font-semibold uppercase text-white shadow-[5px_5px_0_#000] transition-all duration-200 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:bg-black/90 hover:border-black/90 hover:shadow-[7px_7px_0_#000] active:translate-x-[5px] active:translate-y-[5px] active:shadow-none"
-            >
-              <span className="absolute inset-0 -left-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-all duration-500 group-hover:left-full" />
-              <span className="relative flex items-center justify-center gap-2">
-                View Open Positions
-                <ArrowRight className="h-4 w-4" />
-              </span>
-            </Button>
-          </VercelCard>
-        </motion.div>
+              <Button
+                size="lg"
+                className="group relative mt-2 sm:mt-4 w-full sm:w-80 md:w-96 rounded-none overflow-hidden border-[3px] border-black bg-black px-6 py-4 sm:py-6 text-base font-semibold uppercase text-white shadow-[5px_5px_0_#000] transition-all duration-200 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:bg-black/90 hover:border-black/90 hover:shadow-[7px_7px_0_#000] active:translate-x-[5px] active:translate-y-[5px] active:shadow-none"
+              >
+                <span className="absolute inset-0 -left-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-all duration-500 group-hover:left-full" />
+                <span className="relative flex items-center justify-center gap-2">
+                  View Open Positions
+                  <ArrowRight className="h-4 w-4" />
+                </span>
+              </Button>
+            </VercelCard>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );

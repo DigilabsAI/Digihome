@@ -1,9 +1,32 @@
-import { cn } from "@/lib/utils";
+"use client";
 
-export default function CTA2() {
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { TextVariants } from "../uitripled/projectSection";
+import { CTA2Content } from "@/public/constants";
+
+interface CTA2Props {
+  title?: string;
+  subtitle?: string;
+  buttonText?: string;
+}
+
+export default function CTA2({
+  title = CTA2Content.title,
+  subtitle = CTA2Content.subtitle,
+  buttonText = CTA2Content.buttonText,
+}: CTA2Props) {
   return (
-    <main className={cn("flex justify-center items-center w-full px-6 lg:px-0")}>
-      <div
+    <main
+      className={cn(
+        "flex justify-center items-center w-full px-6 py-16 lg:px-0"
+      )}
+    >
+      <motion.div
+        variants={TextVariants}
+        viewport={{ once: true, amount: 0.5 }}
+        whileInView="visible"
+        initial="hidden"
         className="relative w-full max-w-4xl overflow-hidden bg-background p-6 sm:p-10 md:p-20
                       border-4 border-black 
                       shadow-[10px_10px_0_#000]"
@@ -21,12 +44,11 @@ export default function CTA2() {
 
         <div className="relative z-10">
           <h1 className="mb-3 text-3xl font-extrabold text-secondary-foreground sm:text-4xl md:mb-4 md:text-5xl">
-            Let&apos;s Get In Touch.
+            {title}
           </h1>
 
           <p className="mb-6 max-w-md text-base font-medium text-secondary-foreground sm:text-lg md:mb-8">
-            Your laboratory instruments should serve you, not the other way
-            around. We&apos;re happy to help you.
+            {subtitle}
           </p>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
@@ -37,12 +59,12 @@ export default function CTA2() {
                          shadow-[4px_4px_0_#000]
                          active:translate-x-0.5 active:translate-y-0.5"
             >
-              <span className="font-bold">Test Your Samples</span>
+              <span className="font-bold">{buttonText}</span>
               <span className="h-5 w-5 flex-shrink-0 rounded-full bg-black"></span>
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </main>
   );
 }

@@ -44,7 +44,7 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
                   alt={member.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 320px"
-                  className="object-cover"
+                  className="object-contain"
                   priority
                 />
               </motion.div>

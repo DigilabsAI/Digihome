@@ -21,6 +21,7 @@ import {
   elegantTeamMembers,
   totalClients,
   totalProjects,
+  TESTIMONIALS
 } from "@/public/constants";
 
 export default function Home() {
@@ -59,7 +60,7 @@ export default function Home() {
 
       <section className="bg-secondary py-12">
         <div className="max-w-7xl mx-auto px-4 lg:px-5">
-          <TestimonialsGrid />
+          <TestimonialsGrid testimonials={TESTIMONIALS}/>
           <CTA2 />
         </div>
       </section>

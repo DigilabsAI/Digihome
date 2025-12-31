@@ -8,6 +8,7 @@ import { VercelCard } from "./ui/vercel-card";
 import { easeOut, motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { MotionNeobruCard } from "./ui/neobruCard";
+import { NeoButton } from "./ui/neoButton";
 
 interface Hero3Props {
   heading?: string;
@@ -126,16 +127,10 @@ const Hero3 = ({
               </p>
             </div>
           </div>
-          <div className="flex w-full flex-col justify-center gap-2  sm:flex-row lg:justify-start">
-            <Button size="lg" className="group gap-2">
-              Get Started
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-            <Button size="lg" variant="outline" className="group gap-2">
-              <Play className="h-4 w-4" />
-              Watch Demo
-            </Button>
-          </div>
+          <NeoButton className="flex justify-center gap-4 px-12 py-2 " >
+           Let's Get Started
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </NeoButton>
         </div>
 
         <VercelCard glowEffect className=" overflow-hidden p-2">

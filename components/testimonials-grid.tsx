@@ -1,18 +1,24 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { TextVariants } from "./uitripled/projectSection";
 
-type Testimonial = {
-  id?: string;
+export type Testimonial = {
+  id: string;
   name: string;
   role?: string;
   content?: string;
   avatar?: string;
 };
+
+export interface TestimonialsGridProps {
+  testimonials: Testimonial[];
+  initialActive?: number;
+}
 
 function getAvatarUrl(seed?: string, size = 64) {
   const name = seed || "User";
@@ -20,68 +26,44 @@ function getAvatarUrl(seed?: string, size = 64) {
   return `https://ui-avatars.com/api/?name=${s}&size=${size}&background=0D9488&color=fff`;
 }
 
-function getTestimonials(count = 3): Testimonial[] {
-  const samples: Testimonial[] = [
-    {
-      name: "Ada Lovelace",
-      role: "Frontend Engineer",
-      content:
-        "SmoothUI made building beautiful UI components fast and enjoyable. The docs are clear and the components are flexible.",
-      avatar: "Ada Lovelace",
-    },
-    {
-      name: "Grace Hopper",
-      role: "Full Stack Developer",
-      content:
-        "I shaved hours off my development time using SmoothUI—components fit perfectly with our design system.",
-      avatar: "Grace Hopper",
-    },
-    {
-      name: "Linus Torvalds",
-      role: "Software Architect",
-      content:
-        "Stable, well-designed components that just work. Highly recommended for production apps.",
-      avatar: "Linus Torvalds",
-    },
-  ];
-
-  return Array.from({ length: count }, (_, i) => {
-    const base = samples[i % samples.length];
-    return {
-      ...base,
-      id: `${base.name.replace(/\s+/g, "-").toLowerCase()}-${i}`,
-    };
-  });
-}
-
-export default function TestimonialsGrid() {
+export default function TestimonialsGrid({
+  testimonials,
+  initialActive = 0,
+}: TestimonialsGridProps) {
   const [mounted, setMounted] = useState(false);
-  const testimonials = useMemo(() => getTestimonials(7), []);
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(initialActive);
 
   useEffect(() => setMounted(true), []);
 
   const handleNext = useCallback(
-    () => setActive((p) => (p + 1) % testimonials.length),
-    [testimonials.length]
+    () => setActive((p) => (p + 1) % testimonials?.length),
+    [testimonials?.length]
   );
 
-  const handlePrev = () =>
-    setActive((p) => (p - 1 + testimonials.length) % testimonials.length);
+  const handlePrev = useCallback(
+    () => setActive((p) => (p - 1 + testimonials?.length) % testimonials?.length),
+    [testimonials?.length]
+  );
 
   if (!mounted) return null;
 
   return (
-    <section className={cn("bg-muted pb-36 mb-36 md:pb-24 xl:mb-10 ")}>
+    <section className={cn("bg-muted pt-8 pb-36 mb-36 md:pb-24 xl:mb-10")}>
       <div className="container mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="grid grid-cols-1  gap-4 md:gap-12 lg:grid-cols-2"
+          className="grid grid-cols-1 gap-4 md:gap-12 lg:grid-cols-2"
         >
           {/* Left */}
-          <div className="flex flex-col justify-center">
+          <motion.div
+            variants={TextVariants}
+            viewport={{ once: true, amount: 0.5 }}
+            whileInView="visible"
+            initial="hidden"
+            className="flex flex-col justify-center"
+          >
             <h2 className="text-foreground mb-4 text-4xl font-semibold">
               What Developers Say
             </h2>
@@ -89,10 +71,16 @@ export default function TestimonialsGrid() {
               Join thousands of developers building faster, more beautiful UIs
               with SmoothUI.
             </p>
-          </div>
+          </motion.div>
 
           {/* Right */}
-          <div className="relative w-full max-w-md">
+          <motion.div
+            variants={TextVariants}
+            viewport={{ once: true, amount: 0.5 }}
+            whileInView="visible"
+            initial="hidden"
+            className="relative w-full max-w-md"
+          >
             <AnimatePresence>
               {testimonials.map((t, index) => (
                 <motion.div
@@ -110,10 +98,8 @@ export default function TestimonialsGrid() {
                   }`}
                 >
                   <div className="rounded-2xl border bg-background px-6 py-6 shadow-lg">
-                    {/* Content */}
                     <p className="text-foreground mb-6 text-lg">{t.content}</p>
 
-                    {/* Footer */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <Avatar className="size-8 ring-1 ring-foreground/10">
@@ -134,7 +120,6 @@ export default function TestimonialsGrid() {
                         </div>
                       </div>
 
-                      {/* Nav */}
                       <div className="flex gap-2">
                         <button
                           onClick={handlePrev}
@@ -154,7 +139,7 @@ export default function TestimonialsGrid() {
                 </motion.div>
               ))}
             </AnimatePresence>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
