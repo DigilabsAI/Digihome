@@ -4,17 +4,15 @@ import { Testimonial } from "@/components/testimonials-grid";
 //Nav section
 
 export const NAV_ITEMS = [
-  { name: "Home", href: "/" },
-  { name: "Features", href: "/features" },
-  { name: "Solutions", href: "/solutions" },
-  { name: "Pricing", href: "/pricing" },
-  { name: "Resources", href: "/resources" },
-  { name: "Contact", href: "/contact" },
+    { name: "Home", href: "/" },
+    { name: "About Us", href: "/about" },
+    { name: "Projects", href: "/projects" },
+    { name: "Contact", href: "/contact" },
 ];
 
 export const HEADER_BRAND = {
-  name: "Digilabs",
-  subtitle: "Apes together strong",
+    name: "Digilabs",
+    subtitle: "Apes together strong",
 };
 
 
@@ -44,22 +42,23 @@ export const workflow = [
     {
         title: "Discover needs",
         content:
-            "Create your MVP in record time with our pre-built blocks and components.",
+            "We take time to understand your goals, challenges, and users before writing a single line of code.",
         image: "/communication.svg",
     },
     {
         title: "Create the strategy",
         content:
-            "Tailor every component to your needs with our intuitive design system and flexible architecture.",
+            "Based on what we learn, we plan the right approach, tools, and structure to solve the problem efficiently.",
         image: "/team-idea.svg",
     },
     {
         title: "Execute flawlessly",
         content:
-            "Launch your product with confidence using our optimized, responsive, and accessible components.",
+            "We build, test, and deliver a reliable solution that’s ready to use and easy to scale.",
         image: "/idea-launch.svg",
     },
 ];
+
 
 //Project section
 export const projects = [
@@ -84,24 +83,32 @@ export const projects = [
 ];
 
 //Team section
+export type Department =
+    | "all"
+    | "management"
+    | "design"
+    | "development"
+    | "quality assurance"
+    | "operations";
+
 export const title = "The minds behind Digilabs.";
 export const subtitle = "Meet our diverse team of world-class creators, designers, and problem solvers.";
 export const departments: { id: Department; label: string }[] = [
     { id: "management", label: "Management" },
-    { id: "product", label: "Product" },
+    { id: "development", label: "Development" },
     { id: "design", label: "Design" },
-    { id: "marketing", label: "Marketing" },
+    { id: "quality assurance", label: "Quality Assurance" },
 ];
 
 
 export const elegantTeamMembers: TeamMember[] = [
     {
-        name: "Sarah Johnson",
+        name: "Anthony Jumaya",
         department: "management",
-        role: "CEO & Founder",
+        role: "Co-Founder",
         bio: "Visionary leader with 15+ years in tech",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
-        skills: ["Strategy", "Leadership", "Innovation"],
+        image: "/avs1.png",
+        skills: ["Strategy", "Leadership"],
         gradient: "from-white/10 via-white/5 to-transparent",
         social: { twitter: "#", linkedin: "#", github: "#", email: "#" },
     },
@@ -110,8 +117,8 @@ export const elegantTeamMembers: TeamMember[] = [
         department: "management",
         role: "CTO",
         bio: "Full-stack architect and AI enthusiast",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael",
-        skills: ["AI/ML", "Architecture", "Cloud"],
+        image: "/avs2.png",
+        skills: ["AI/ML", "Architecture"],
         gradient: "from-white/12 via-white/5 to-transparent",
         social: { twitter: "#", linkedin: "#", github: "#", email: "michael@example.com" },
     },
@@ -120,8 +127,8 @@ export const elegantTeamMembers: TeamMember[] = [
         department: "management",
         role: "Head of Design",
         bio: "Creative mind behind beautiful interfaces",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",
-        skills: ["UI/UX", "Branding", "Motion"],
+        image: "/avs3.png",
+        skills: ["UI/UX", "Branding"],
         gradient: "from-white/12 via-white/5 to-transparent",
         social: { twitter: "#", linkedin: "#", github: "#", email: "#" },
     },
@@ -130,8 +137,8 @@ export const elegantTeamMembers: TeamMember[] = [
         department: "management",
         role: "Lead Developer",
         bio: "Code wizard and performance optimizer",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=David",
-        skills: ["React", "TypeScript", "Performance"],
+        image: "/avs4.png",
+        skills: ["React", "TypeScript"],
         gradient: "from-foreground/12 via-foreground/5 to-transparent",
         social: { twitter: "#", linkedin: "#", github: "#", email: "david@example.com" },
     },
@@ -200,23 +207,15 @@ export const TESTIMONIALS: Testimonial[] = [
 
 //CTA section
 export const CTA2Content = {
-    title: "Start your project today.",
-    subtitle: "Your laboratory instruments should serve you, not the other way around. We're happy to help you.",
-    buttonText: "Test Your Samples",
+    title: "Your project starts here.",
+    subtitle: "Let’s work together to build the right solution for you. project starts with a clear plan and the right team.",
+    buttonText: "START NOW",
 };
 
 
 
 //Footer section
-export type Department =
-    | "all"
-    | "management"
-    | "product"
-    | "design"
-    | "marketing"
-    | "sales"
-    | "customer"
-    | "operations";
+
 
 
 export const footerSections = [

@@ -143,38 +143,38 @@ const Hero3 = ({
               className="absolute top-0 right-0 md:right-12 transform-gpu "
             >
               <div className="flex items-start gap-0.5 md:gap-1.5 pr-2 md:pr-6 text-foreground">
-                <Award className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="text-xs font-semibold uppercase tracking-wider ">
+                <Award   className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 text-primary" aria-hidden="true" />
+              <span className="text-[0.5rem] sm:text-xs font-medium uppercase tracking-wider ">
                   Projects
                 </span>
               </div>
-              <p className="text-lg md:text-2xl font-bold text-foreground tabular-nums">
+            <p className="text-sm md:text-2xl font-bold text-foreground tabular-nums">
                 {totalProjects}
               </p>
-              <p className="text-xs text-foreground/50">Delivered</p>
+               <p className="text-[0.5rem] sm:text-xs text-foreground/50">Delivered</p>
             </MotionNeobruCard>
             <MotionNeobruCard
               variants={cardVariants(4, -5)}
               initial="initial"
               animate="animate"
               whileHover="hover"
-              className="absolute bottom-4 left-4 md:left-20
+              className="absolute bottom-4 left-5 md:left-20
             transform-gpu 
            "
             >
               <div className="flex items-start gap-0.5 md:gap-1.5 pr-2 md:pr-6 text-foreground">
                 <Users
-                  className="h-3.5 w-3.5 text-primary"
+                  className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 text-primary"
                   aria-hidden="true"
                 />
-                <span className="text-xs font-medium uppercase tracking-wider ">
+                <span className="text-[0.5rem] sm:text-xs font-medium uppercase tracking-wider ">
                   Clients
                 </span>
               </div>
-              <p className="text-lg md:text-2xl font-bold text-foreground tabular-nums">
+              <p className="text-sm md:text-2xl font-bold text-foreground tabular-nums">
                 {totalClients}
               </p>
-              <p className="text-xs text-foreground/50">Trusted Partners</p>
+              <p className="text-[0.5rem] sm:text-xs text-foreground/50">Trusted Partners</p>
             </MotionNeobruCard>
             <Image
               src="/MessyDoodle.svg"

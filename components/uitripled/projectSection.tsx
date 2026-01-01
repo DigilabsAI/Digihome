@@ -50,11 +50,10 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
         className="relative z-10 text-center"
       >
         <h2 className="font-geist text-3xl font-bold tracking-tighter md:text-4xl lg:text-5xl">
-         Our latest work.
+          Our latest work.
         </h2>
         <p className="mt-3 font-geist text-foreground/60">
-          MVPBlocks helps you create, customize, and deploy your product faster
-          than ever before.
+          We design with real challenges in mind, not just visuals.
         </p>
       </motion.div>
 

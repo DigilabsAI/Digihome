@@ -55,8 +55,7 @@ export default function FeatureSteps({ workflow }: WorkflowProps) {
             How we solve problems.
             </h2>
             <p className="font-geist text-foreground/60 mt-3">
-              MVPBlocks helps you create, customize, and deploy your product
-              faster than ever before.
+             Everything we build is shaped around what you want to achieve.
             </p>
           </motion.div>
         </div>

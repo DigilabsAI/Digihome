@@ -87,7 +87,7 @@ export default function Team4({
         >
           <h2 className="mb-4 font-serif text-4xl leading-tight md:text-5xl">
             {titleParts?.map((part, index) =>
-              part.toLowerCase() === "magic" ? (
+              part.toLowerCase() === "digilabs" ? (
                 <span key={index} className="italic">
                   {part}
                 </span>
@@ -156,8 +156,7 @@ export default function Team4({
               </h3>
 
               <p className="text-sm sm:text-base md:text-lg text-secondary-foreground/80">
-                We&apos;re always looking for talented people to join our
-                mission
+               Collaborate, learn, and create.
               </p>
 
               <Button

@@ -30,21 +30,17 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
         <div className="mb-4 flex justify-center">
           <motion.div
             className="relative w-full"
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
-            <NeobruCard className="relative h-40 w-full overflow-hidden p-0 bg-card/80">
-              <motion.div
-                className="relative h-full w-full"
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.3 }}
-              >
+            <NeobruCard className="relative h-44 w-full overflow-hidden p-1 md:p-0 bg-card/80">
+              <motion.div className="relative h-full w-full">
                 <Image
                   src={member.image}
                   alt={member.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 320px"
-                  className="object-contain"
+                  className="object-cover aspect-square"
                   priority
                 />
               </motion.div>
@@ -54,7 +50,7 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
 
         {/* Info */}
         <div className="text-center">
-          <h3 className="mb-1 text-xl font-semibold tracking-tight text-secondary-foreground">
+          <h3 className="mb-0.5 text-xl font-semibold tracking-tight text-secondary-foreground">
             {member.name}
           </h3>
 
@@ -64,6 +60,11 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
           >
             {member.role}
           </Badge>
+
+          {/* Bio */}
+          <p className="mb-4 max-w-xs mx-auto text-sm leading-relaxed text-secondary-foreground/90">
+            {member.bio}
+          </p>
 
           {/* Skills */}
           <div className="mb-4 flex flex-wrap justify-center gap-1.5">

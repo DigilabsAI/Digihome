@@ -65,11 +65,10 @@ export default function TestimonialsGrid({
             className="flex flex-col justify-center"
           >
             <h2 className="text-foreground mb-4 text-4xl font-semibold">
-              What Developers Say
+              Voices from our Partners.
             </h2>
             <p className="text-foreground/70 text-lg">
-              Join thousands of developers building faster, more beautiful UIs
-              with SmoothUI.
+             Experiences from people who have worked and grown with us.
             </p>
           </motion.div>
 
@@ -100,7 +99,7 @@ export default function TestimonialsGrid({
                   <div className="rounded-2xl border bg-background px-6 py-6 shadow-lg">
                     <p className="text-foreground mb-6 text-lg">{t.content}</p>
 
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 flex-col md:flex-row justify-between">
                       <div className="flex items-center gap-3">
                         <Avatar className="size-8 ring-1 ring-foreground/10">
                           <AvatarImage
