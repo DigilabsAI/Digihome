@@ -1,5 +1,5 @@
-import { TeamMember } from "@/components/mvpblocks/team-member-card";
-import { Testimonial } from "@/components/testimonials-grid";
+import { TeamMember } from "@/components/blocks/team-member-card";
+import { Testimonial } from "@/components/blocks/testimonials-grid";
 
 //Nav section
 
@@ -277,4 +277,32 @@ export const footerSections = [
             },
         ],
     },
+];
+
+
+
+//About Page
+
+export const experiences = [
+  {
+    title: "Senior Full Stack Developer",
+    company: "TechCorp Solutions",
+    period: "2023 - Present",
+    description:
+      "Led the development of enterprise-scale web applications, mentored junior developers, and implemented best practices for code quality and performance optimization.",
+  },
+  {
+    title: "Full Stack Developer",
+    company: "Digital Innovations Inc",
+    period: "2021 - 2023",
+    description:
+      "Developed and maintained multiple client projects, implemented responsive designs, and integrated third-party APIs for enhanced functionality.",
+  },
+  {
+    title: "Frontend Developer",
+    company: "WebTech Studios",
+    period: "2018 - 2021",
+    description:
+      "Created responsive and interactive user interfaces, collaborated with designers, and optimized application performance.",
+  },
 ];

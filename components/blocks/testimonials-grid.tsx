@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { TextVariants } from "./uitripled/projectSection";
+import { TextVariants } from "./projectSection";
 
 export type Testimonial = {
   id: string;

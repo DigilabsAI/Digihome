@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { Hero3 } from "@/components/hero3";
-import Header2 from "@/components/mvpblocks/header-2";
-import Team4 from "@/components/mvpblocks/team-4";
-import Footer from "@/components/footer";
-import FeatureSteps from "@/components/mvpblocks/feature-2";
-import ProjectSection from "@/components/uitripled/projectSection";
-import TestimonialsGrid from "@/components/testimonials-grid";
-import CTA2 from "@/components/mvpblocks/cta-2";
+import { Hero3 } from "@/components/blocks/hero3";
+import Header2 from "@/components/blocks/header-2";
+import Team4 from "@/components/blocks/team-4";
+import Footer from "@/components/blocks/footer";
+import FeatureSteps from "@/components/blocks/feature-2";
+import ProjectSection from "@/components/blocks/projectSection";
+import TestimonialsGrid from "@/components/blocks/testimonials-grid";
+import CTA2 from "@/components/blocks/cta-2";
 import {
   title,
   subtitle,

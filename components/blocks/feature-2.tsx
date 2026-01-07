@@ -5,7 +5,7 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { MotionNeobruCard } from "../ui/neobruCard";
-import { TextVariants } from "../uitripled/projectSection";
+import { TextVariants } from "./projectSection";
 
 type WorkflowItem = {
   title?: string;

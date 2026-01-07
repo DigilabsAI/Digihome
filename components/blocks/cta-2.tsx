@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { TextVariants } from "../uitripled/projectSection";
+import { TextVariants } from "./projectSection";
 import { CTA2Content } from "@/public/constants";
 
 interface CTA2Props {

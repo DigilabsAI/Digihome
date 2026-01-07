@@ -4,11 +4,11 @@ import { Users, Star, ArrowRight, Play, Award, Target } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { VercelCard } from "./ui/vercel-card";
+import { VercelCard } from "../ui/vercel-card";
 import { easeOut, motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import { MotionNeobruCard } from "./ui/neobruCard";
-import { NeoButton } from "./ui/neoButton";
+import { MotionNeobruCard } from "../ui/neobruCard";
+import { NeoButton } from "../ui/neoButton";
 
 interface Hero3Props {
   heading?: string;

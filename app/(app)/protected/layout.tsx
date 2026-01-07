@@ -1,7 +1,7 @@
-import { DeployButton } from "@/components/deploy-button";
-import { EnvVarWarning } from "@/components/env-var-warning";
-import { AuthButton } from "@/components/auth-button";
-import { ThemeSwitcher } from "@/components/theme-switcher";
+import { DeployButton } from "@/components/blocks/deploy-button";
+import { EnvVarWarning } from "@/components/blocks/env-var-warning";
+import { AuthButton } from "@/components/blocks/auth-button";
+import { ThemeSwitcher } from "@/components/blocks/theme-switcher";
 import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
 import { Suspense } from "react";

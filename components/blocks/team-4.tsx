@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 import { Department } from "@/public/constants";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { TextVariants } from "../uitripled/projectSection";
+import { TextVariants } from "./projectSection";
 
 const containerVariants: Variants = {
   hidden: {},
