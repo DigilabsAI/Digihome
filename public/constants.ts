@@ -5,7 +5,7 @@ import { Testimonial } from "@/components/blocks/testimonials-grid";
 
 export const NAV_ITEMS = [
     { name: "Home", href: "/" },
-    { name: "About Us", href: "/about" },
+    { name: "About", href: "/about" },
     { name: "Projects", href: "/projects" },
     { name: "Contact", href: "/contact" },
 ];

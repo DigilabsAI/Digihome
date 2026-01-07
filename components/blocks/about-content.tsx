@@ -1,14 +1,8 @@
-"use client"
-
-import { Copy, Facebook, Linkedin, Twitter } from "lucide-react"
-
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import Timeline from "./timeline"
 
 export function AboutContentBlock() {
   return (
-    <section className="grid min-h-screen place-items-center mx-auto max-w-screen-md">
+    <section className="grid min-h-screen place-items-center mx-auto max-w-screen-md pt-20">
       <div className=" p-4">
         <img
           src="https://v3.material-tailwind.com/trees.jpg"

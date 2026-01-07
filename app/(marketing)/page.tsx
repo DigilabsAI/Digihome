@@ -29,7 +29,6 @@ export default function Home() {
     <main className="min-h-screen flex flex-col">
       <section className="bg-background">
         <div className="max-w-7xl mx-auto px-4 lg:px-5">
-          <Header2 />
           <Hero3
             heading={heading}
             description={description}
