@@ -1,7 +1,6 @@
-import Link from "next/link";
+
 import { Suspense } from "react";
 import { Hero3 } from "@/components/blocks/hero3";
-import Header2 from "@/components/blocks/header-2";
 import Team4 from "@/components/blocks/team-4";
 import Footer from "@/components/blocks/footer";
 import FeatureSteps from "@/components/blocks/feature-2";
