@@ -22,7 +22,7 @@ import {
 import {
   InputGroup,
   InputGroupInput,
-} from "@/components/ui/input-group";
+} from "@/app/(app)/AppComponents/input-group";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 

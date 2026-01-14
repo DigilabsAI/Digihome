@@ -33,12 +33,12 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/app/(app)/AppComponents/dropdown-menu";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@/components/ui/input-group";
+} from "@/app/(app)/AppComponents/input-group";
 import { Progress } from "@/components/ui/progress";
 import {
   Select,
@@ -213,7 +213,6 @@ function ProjectCard({
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => onDelete(project.id)}
-              variant="destructive"
             >
               <Trash2 className="size-4" />
               Delete
@@ -314,7 +313,6 @@ function ProjectCard({
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => onDelete(project.id)}
-                variant="destructive"
               >
                 <Trash2 className="size-4" />
                 Delete

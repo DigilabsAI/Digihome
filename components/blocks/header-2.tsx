@@ -130,7 +130,7 @@ export default function Header2() {
             >
               <Link
                 prefetch={false}
-                href="/login"
+                href="/join"
                 className="text-foreground/80 hover:text-foreground px-4 py-2 text-sm font-medium transition-colors duration-200"
               >
                 Join Us
@@ -141,7 +141,7 @@ export default function Header2() {
               >
                 <Link
                   prefetch={false}
-                  href="/signup"
+                  href="/contact"
                   className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center space-x-2 rounded-lg px-5 py-2.5 text-sm font-medium shadow-sm transition-all duration-200"
                 >
                   <span>Get Started</span>

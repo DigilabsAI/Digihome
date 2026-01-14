@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -18,8 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { PiCheckLight } from "react-icons/pi";
+import { FacebookIcon, Mail, Phone, Send } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 import NeobruCard from "../ui/neobruCard";
 
 const FormSchema = z.object({
@@ -86,142 +85,226 @@ export default function ContactForm() {
     }
   }
 
+  const iconVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.35, ease: "easeOut" },
+    },
+  };
+
   return (
-    <div className="md:flex justify-center pt-20 px-8">
-      <div>
-        <div className="text-5xl font-medium w-2/3">Contact our sales team</div>
-        <div className="py-4 text-gray-500">
-          Let&apos;s talk about how Bird can help your team work better.
-        </div>
+    <div className="mx-auto max-w-6xl px-6 pt-24">
+      <div className="grid gap-10 md:grid-cols-2 items-start">
+        <motion.div
+          variants={iconVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-col gap-6  bg-background/50 px-6  pb-6 backdrop-blur"
+        >
+          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-foreground/70">
+            <span className="h-2 w-2 rounded-full bg-primary/80" />
+            Response within 24 hours
+          </div>
 
-        <div className="bg-[#f6f5f4] md:w-4/5 space-y-6 p-4 rounded-lg my-4">
-          {[
-            "One flexible tool for your entire company to share knowledge, ship projects, and collaborate.",
-            "Enterprise features to securely manage user access and security.",
-            "Dedicated support to work with you on your setup and help you build the best plan for your company.",
-          ].map((text, i) => (
-            <div key={i} className="flex gap-4 border-b last:border-none">
-              <PiCheckLight className="text-2xl" />
-              <div className="font-normal pb-4 w-80">{text}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">
+              Tell us about your project
+            </h3>
+            <p className="text-sm text-foreground/70">
+              We’ll schedule a discovery call. Prefer email?{" "}
+              <a
+                href="mailto:hello@example.com"
+                target="_blank"
+                className="underline hover:text-primary"
+              >
+                devajofdigilabs@gmail.com
+              </a>
+            </p>
+          </div>
 
-      {!submitted ? (
-        <NeobruCard className="p-8">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="md:flex gap-6">
-              <div className="w-full">
-                <label className="text-sm">First name *</label>
-                <Input {...register("first_name")} />
-              </div>
-
-              <div className="w-full">
-                <label className="text-sm">Last name *</label>
-                <Input {...register("last_name")} />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-sm">Work email *</label>
-              <Input {...register("email")} />
-            </div>
-
-            <div>
-              <label className="text-sm">Company name *</label>
-              <Input {...register("company_name")} />
-            </div>
-
-            <div className="flex items-center justify-evenly gap-6 md:flex-nowrap flex-wrap">
-              <div className="w-full">
-                <label className="text-sm">Company size *</label>
-                <Select
-                  value={watch("company_size")}
-                  onValueChange={(v) =>
-                    setValue("company_size", v as FormValues["company_size"])
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {["1-10", "11-50", "51-200", "501-1000", "1000+"].map(
-                      (v) => (
-                        <SelectItem key={v} value={v}>
-                          {v}
-                        </SelectItem>
-                      )
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="w-full">
-                <label className="text-sm">How can we help?</label>
-                <Select
-                  value={watch("help")}
-                  onValueChange={(v) =>
-                    setValue("help", v as FormValues["help"])
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {[
-                      "Evaluate Bird for my company",
-                      "Learn More",
-                      "Get a Quote",
-                      "How to use Bird",
-                      "Other",
-                    ].map((v) => (
-                      <SelectItem key={v} value={v}>
-                        {v}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          <div className="grid gap-3 text-sm">
+            <div className="flex gap-3 rounded-none border p-3">
+              <Mail className="h-4 w-4 mt-0.5" />
+              <div>
+                <p className="font-medium">Email</p>
+                <p>devajofdigilabs@gmail.com</p>
               </div>
             </div>
-
-            <div>
-              <label className="text-sm">Anything else?</label>
-              <Textarea style={{ height: "100px" }} {...register("info")} />
-            </div>
-
-            <div className="flex gap-4 items-center">
-              <Checkbox />
-              <div className="text-xs font-light md:w-3/4">
-                I agree to Bird&apos;s marketing communications
+            <div className="flex gap-3 rounded-none border p-3">
+              <Mail className="h-4 w-4 mt-0.5" />
+              <div>
+                <p className="font-medium">Alternative Email</p>
+                <p>hello@example.com</p>
               </div>
             </div>
-
-            <Button
-              type="submit"
-              disabled={loading}
-              className="text-sm font-light w-full"
-            >
-              Submit
-            </Button>
-          </form>
-        </NeobruCard>
-      ) : (
-        <div className="text-xl md:text-2xl flex justify-center px-8">
-          <div className="w-80 text-center">
-            <Image
-              src="/assets/MeditatingDoodle.svg"
-              alt="logo"
-              width={1000}
-              height={1000}
-              className="mx-auto"
-            />
-            <div className="text-gray-500 font-light py-10">
-              We&apos;ve received your inquiry and will contact you shortly.
+            <div className="flex gap-3  rounded-none border p-3">
+              <FacebookIcon className="h-4 w-4 mt-0.5" />
+              <div>
+                <p className="font-medium">Facebook</p>
+                <p>+1 (555) 123-4567</p>
+              </div>
+            </div>
+            <div className="flex gap-3  rounded-none border p-3">
+              <FacebookIcon className="h-4 w-4 mt-0.5" />
+              <div>
+                <p className="font-medium">Alternative Facebook</p>
+                <p>+1 (555) 123-4567</p>
+              </div>
+            </div>
+            <div className="flex gap-3  rounded-none border p-3">
+              <Phone className="h-4 w-4 mt-0.5" />
+              <div>
+                <p className="font-medium">Phone</p>
+                <p>+1 (555) 123-4567</p>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        </motion.div>
+
+        {!submitted ? (
+          <motion.div
+            variants={iconVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <NeobruCard className="p-8">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div className="md:flex gap-6">
+                  <div className="w-full">
+                    <label className="text-sm">First name *</label>
+                    <Input {...register("first_name")} />
+                  </div>
+
+                  <div className="w-full">
+                    <label className="text-sm">Last name *</label>
+                    <Input {...register("last_name")} />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm">Work email *</label>
+                  <Input {...register("email")} />
+                </div>
+
+                <div>
+                  <label className="text-sm">Company name *</label>
+                  <Input {...register("company_name")} />
+                </div>
+
+                <div className="flex items-center justify-evenly gap-6 md:flex-nowrap flex-wrap">
+                  <div className="w-full">
+                    <label className="text-sm">Company size *</label>
+                    <Select
+                      value={watch("company_size")}
+                      onValueChange={(v) =>
+                        setValue(
+                          "company_size",
+                          v as FormValues["company_size"]
+                        )
+                      }
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["1-10", "11-50", "51-200", "501-1000", "1000+"].map(
+                          (v) => (
+                            <SelectItem key={v} value={v}>
+                              {v}
+                            </SelectItem>
+                          )
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="w-full">
+                    <label className="text-sm">How can we help?</label>
+                    <Select
+                      value={watch("help")}
+                      onValueChange={(v) =>
+                        setValue("help", v as FormValues["help"])
+                      }
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {[
+                          "Evaluate Bird for my company",
+                          "Learn More",
+                          "Get a Quote",
+                          "How to use Bird",
+                          "Other",
+                        ].map((v) => (
+                          <SelectItem key={v} value={v}>
+                            {v}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm">Anything else?</label>
+                  <Textarea style={{ height: "100px" }} {...register("info")} />
+                </div>
+
+                <div className="flex gap-4 items-center">
+                  <p className="text-xs text-foreground/60">
+                    By submitting this form you agree to our{" "}
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      //TODO: Update privacy policy link
+                      href="#"
+                      className="text-foreground underline decoration-border/70 underline-offset-4 transition-colors hover:text-primary"
+                    >
+                      privacy policy
+                    </a>
+                    .
+                  </p>
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="text-sm font-light w-full"
+                >
+                  Submit
+                  <Send
+                    className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                    aria-hidden="true"
+                  />
+                </Button>
+              </form>
+            </NeobruCard>
+          </motion.div>
+        ) : (
+          <motion.div
+            variants={iconVariants}
+            initial="hidden"
+            animate="visible"
+            className="text-xl md:text-2xl flex justify-center px-8"
+          >
+            <div className="w-80 text-center">
+              <Image
+                src="/assets/MeditatingDoodle.svg"
+                alt="logo"
+                width={1000}
+                height={1000}
+                className="mx-auto"
+              />
+              <div className="text-gray-500 font-light py-10">
+                We&apos;ve received your inquiry and will contact you shortly.
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 }
