@@ -29,9 +29,13 @@ export async function GET(request: Request) {
       }
     }
   }
+  else{
+    console.log("No code found in URL")
+  }
   if(error) {
     console.log(error)
   }
+
 
   // return the user to an error page with instructions
   return NextResponse.redirect(`${origin}/auth/auth-code-error`)
