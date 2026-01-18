@@ -3,36 +3,32 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-
 interface CustomClaims {
-  role?: string;
-  [key: string]: any; // fallback for unexpected keys
+  user_role?: string;
+  is_setup_done?: boolean;
+  [key: string]: any;
 }
 
-export async function getCurrentUser(includeRole: boolean = false) {
+export async function getCurrentUser() {
   const supabase = await createClient();
-
 
   const {
     data: { user },
-    error: userError,
+    error,
   } = await supabase.auth.getUser();
 
-  if (userError || !user) {
-    console.warn("⚠️ Unauthorized access or invalid session:", userError?.message);
+  if (error || !user) {
     redirect("/auth/login");
   }
 
+  const { data } = await supabase.auth.getClaims();
+  const claims = (data?.claims ?? {}) as CustomClaims;
 
-  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
-
-  if (claimsError) {
-    console.error("Failed to get claims:", claimsError.message);
-  }
-
-  const claims = (claimsData?.claims ?? {}) as CustomClaims;
-
-  const role = includeRole ? claims.user_role ?? null : null;
-
-  return { supabase, user, claims, role };
+  return {
+    supabase,
+    user,
+    role: claims.user_role ?? "non-member",
+    is_setup_done: claims.is_setup_done ?? true,
+    claims,
+  };
 }

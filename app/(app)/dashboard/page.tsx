@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { InfoIcon } from "lucide-react";
 import { Suspense } from "react";
-import { getCurrentUser } from "@/lib/supabase/getCurrentUser";
-import { jwtDecode } from "jwt-decode";
+import { get } from "http";
+import { getUserWithRole } from "@/lib/actions/getUserWithRole";
+import UserRole from "../AppComponents/userRole";
 
 async function UserDetails() {
   const supabase = await createClient();
@@ -17,12 +18,8 @@ async function UserDetails() {
   return JSON.stringify(data.claims, null, 2);
 }
 
-
 export default async function ProtectedPage() {
-  const { supabase, user, role } = await getCurrentUser(true);
 
-  console.log("Current user:", user);
-  console.log("User role:", role);
 
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
@@ -30,14 +27,13 @@ export default async function ProtectedPage() {
         <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
           <InfoIcon size="16" strokeWidth={2} />
           Site Under Development. Some features may not work as expected.
-          {role && (<span className="font-medium"> Your role: {role}</span>
-          )}
         </div>
       </div>
       <div className="flex flex-col gap-2 items-start">
         <h2 className="font-bold text-2xl mb-4"> User details</h2>
         <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
           <Suspense>
+            <UserRole />
             <UserDetails />
           </Suspense>
         </pre>

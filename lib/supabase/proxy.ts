@@ -1,74 +1,58 @@
+import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+ const response = NextResponse.next({ request });
 
+  const pathname = request.nextUrl.pathname;
 
-  // With Fluid compute, don't put this client in a global environment
-  // variable. Always create a new one on each request.
+  // 1️⃣ Skip RBAC checks for public pages and auth callbacks
+  const publicPaths = ["/", "/about", "/contact", "/projects"];
+  if (pathname.startsWith("/auth") || publicPaths.includes(pathname)) {
+    return response;
+  }
+
+  // 2️⃣ Create Supabase client (server-side)
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value),
-          );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options),
-          );
-        },
+        getAll: () => request.cookies.getAll(),
+        setAll: () => {},
       },
-    },
+    }
   );
 
-  // Do not run code between createServerClient and
-  // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
+  // 3️⃣ Get authenticated user
+  const { data: { user } } = await supabase.auth.getUser();
 
-  // IMPORTANT: If you remove getClaims() and you use server-side rendering
-  // with the Supabase client, your users may be randomly logged out.
-  const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
-
-  if (
-    request.nextUrl.pathname !== "/" &&
-    request.nextUrl.pathname !== "/about" &&
-    request.nextUrl.pathname !== "/projects" &&
-    request.nextUrl.pathname !== "/contact" &&
-    // request.nextUrl.pathname !== "/join" &&
-    !user &&
-    !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/auth")
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
-    return NextResponse.redirect(url);
+  if (!user) {
+    // Not logged in → redirect to login
+    return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  // IMPORTANT: You *must* return the supabaseResponse object as it is.
-  // If you're creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
+  // 4️⃣ Query role and setup from DB
+  const { data, error } = await supabase
+    .from("users")
+    .select("role, is_setup_done")
+    .eq("id", user.id)
+    .single();
 
-  return supabaseResponse;
+  const role = data?.role ?? "non-member";
+  const setupDone = data?.is_setup_done ?? false;
+
+ 
+  // // 5️⃣ Enforce setup page
+  // if (!setupDone && pathname !== "/setup") {
+  //   return NextResponse.redirect(new URL("/setup", request.url));
+  // }
+
+  // // 6️⃣ Enforce admin pages
+  // if (pathname.startsWith("/admin") && role !== "admin") {
+  //   return NextResponse.redirect(new URL("/dashboard", request.url));
+  // }
+
+  // 7️⃣ Everything else is fine
+  return response;
 }

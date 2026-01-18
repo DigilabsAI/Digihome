@@ -1,42 +1,42 @@
 import { NextResponse } from 'next/server'
-// The client you created from the Server-Side Auth instructions
 import { createClient } from '@/lib/supabase/server'
-import { error } from 'console'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  // if "next" is in param, use it as the redirect URL
-  let next = searchParams.get('protected') ?? '/protected'
-  if (!next.startsWith('/')) {
-    // if "next" is not a relative URL, use the default
-    next = '/protected'
+
+  // Use "protected" query param as next redirect, default to /dashboard
+  let next = searchParams.get('protected') ?? '/dashboard'
+  if (!next.startsWith('/')) next = '/dashboard'
+
+  if (!code) {
+    console.warn('[OAuth Callback] No code in URL')
+    return NextResponse.redirect(`${origin}/auth/auth-code-error`)
   }
 
-  if (code) {
+  try {
     const supabase = await createClient()
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error) {
-      const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
-      const isLocalEnv = process.env.NODE_ENV === 'development'
-      if (isLocalEnv) {
-        // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
-        return NextResponse.redirect(`${origin}${next}`)
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`)
-      } else {
-        return NextResponse.redirect(`${origin}${next}`)
-      }
+
+    const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+    if (exchangeError) {
+      console.error('[OAuth Callback] exchangeCodeForSession error:', exchangeError.message)
+      return NextResponse.redirect(`${origin}/auth/auth-code-error`)
     }
-  }
-  else{
-    console.log("No code found in URL")
-  }
-  if(error) {
-    console.log(error)
-  }
 
+    // Determine redirect
+    const forwardedHost = request.headers.get('x-forwarded-host')
+    const isLocal = process.env.NODE_ENV === 'development'
 
-  // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+    const redirectUrl = isLocal
+      ? `${origin}${next}`
+      : forwardedHost
+      ? `https://${forwardedHost}${next}`
+      : `${origin}${next}`
+
+    return NextResponse.redirect(redirectUrl)
+
+  } catch (err) {
+    console.error('[OAuth Callback] Unexpected error:', err)
+    return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+  }
 }
