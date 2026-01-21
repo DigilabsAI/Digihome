@@ -1,12 +1,12 @@
 import "@/app/globals.css";
 import { ThemeProvider } from "next-themes";
-
+import { Toaster } from "sonner";
 
 import type { Metadata } from "next";
 
 const defaultUrl = process.env.VERCEL_URL
-? `https://${process.env.VERCEL_URL}`
-: "http://localhost:3000";
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
@@ -29,6 +29,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster position="top-center" expand visibleToasts={4} />
         </ThemeProvider>
       </body>
     </html>

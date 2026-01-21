@@ -3,8 +3,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { InfoIcon } from "lucide-react";
 import { Suspense } from "react";
-import { get } from "http";
-import { getUserWithRole } from "@/lib/actions/getUserWithRole";
 import UserRole from "../AppComponents/userRole";
 
 async function UserDetails() {

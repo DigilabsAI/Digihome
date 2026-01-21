@@ -113,51 +113,69 @@ export default function ContactForm() {
               Tell us about your project
             </h3>
             <p className="text-sm text-foreground/70">
-              We’ll schedule a discovery call. Prefer email?{" "}
-              <a
-                href="mailto:hello@example.com"
-                target="_blank"
-                className="underline hover:text-primary"
-              >
-                devajofdigilabs@gmail.com
-              </a>
+              Please use the contact details below to get in touch with our
+              team.{" "}
             </p>
           </div>
 
-          <div className="grid gap-3 text-sm">
+          <div className="grid gap-1 text-sm">
             <div className="flex gap-3 rounded-none border p-3">
               <Mail className="h-4 w-4 mt-0.5" />
               <div>
                 <p className="font-medium">Email</p>
-                <p>devajofdigilabs@gmail.com</p>
+                <a
+                  href="mailto:devajofdigilabs@gmail.com"
+                  target="_blank"
+                  className="underline hover:text-primary"
+                >
+                  devajofdigilabs@gmail.com
+                </a>
               </div>
             </div>
             <div className="flex gap-3 rounded-none border p-3">
               <Mail className="h-4 w-4 mt-0.5" />
               <div>
                 <p className="font-medium">Alternative Email</p>
-                <p>hello@example.com</p>
+                <a
+                  href="mailto:devajofdigilabs@gmail.com"
+                  target="_blank"
+                  className="underline hover:text-primary"
+                >
+                  devajofdigilabs@gmail.com
+                </a>
               </div>
             </div>
             <div className="flex gap-3  rounded-none border p-3">
               <FacebookIcon className="h-4 w-4 mt-0.5" />
               <div>
                 <p className="font-medium">Facebook</p>
-                <p>+1 (555) 123-4567</p>
+                <a
+                  href="mailto:devajofdigilabs@gmail.com"
+                  target="_blank"
+                  className="underline hover:text-primary"
+                >
+                  devajofdigilabs@gmail.com
+                </a>
               </div>
             </div>
             <div className="flex gap-3  rounded-none border p-3">
               <FacebookIcon className="h-4 w-4 mt-0.5" />
               <div>
                 <p className="font-medium">Alternative Facebook</p>
-                <p>+1 (555) 123-4567</p>
+                <a
+                  href="mailto:devajofdigilabs@gmail.com"
+                  target="_blank"
+                  className="underline hover:text-primary"
+                >
+                  devajofdigilabs@gmail.com
+                </a>
               </div>
             </div>
             <div className="flex gap-3  rounded-none border p-3">
               <Phone className="h-4 w-4 mt-0.5" />
               <div>
                 <p className="font-medium">Phone</p>
-                <p>+1 (555) 123-4567</p>
+                <a href="tel:+639123456789">+63 912 345 6789</a>
               </div>
             </div>
           </div>
@@ -201,7 +219,7 @@ export default function ContactForm() {
                       onValueChange={(v) =>
                         setValue(
                           "company_size",
-                          v as FormValues["company_size"]
+                          v as FormValues["company_size"],
                         )
                       }
                     >
@@ -214,7 +232,7 @@ export default function ContactForm() {
                             <SelectItem key={v} value={v}>
                               {v}
                             </SelectItem>
-                          )
+                          ),
                         )}
                       </SelectContent>
                     </Select>

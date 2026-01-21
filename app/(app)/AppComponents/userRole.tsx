@@ -1,4 +1,4 @@
-import { getUserWithRole } from '@/lib/actions/getUserWithRole';
+import { getUserWithRole } from '@/lib/actions/userAction';
 
 
 export default async function UserRole() {

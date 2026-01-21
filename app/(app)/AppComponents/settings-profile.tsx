@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, Loader2, Save, X } from "lucide-react";
+import { Camera, CheckIcon, Loader2, PlusIcon, Save, X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -25,6 +25,17 @@ import {
 } from "@/app/(app)/AppComponents/input-group";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tags,
+  TagsContent,
+  TagsEmpty,
+  TagsGroup,
+  TagsInput,
+  TagsItem,
+  TagsList,
+  TagsTrigger,
+  TagsValue,
+} from "@/components/kibo-ui/tags";
 
 export interface SocialLink {
   platform: string;
@@ -39,6 +50,8 @@ export interface ProfileData {
   website?: string;
   avatar?: string;
   socialLinks?: SocialLink[];
+  roles?: string[];
+  department?: string;
 }
 
 export interface SettingsProfileProps {
@@ -50,6 +63,23 @@ export interface SettingsProfileProps {
   className?: string;
   showEmailVerification?: boolean;
 }
+
+const availableRoles = [
+  "Frontend",
+  "Backend",
+  "Fullstack",
+  "Mobile",
+  "DevOps",
+  "UI/UX",
+];
+
+const departmentOptions = [
+  { id: "management", label: "Management" },
+  { id: "development", label: "Development" },
+  { id: "design", label: "Design" },
+  { id: "pentesting", label: "Pentesting" },
+  { id: "qa", label: "Quality Assurance" },
+];
 
 const defaultSocialPlatforms = [
   {
@@ -73,18 +103,14 @@ const defaultSocialPlatforms = [
 export default function SettingsProfile({
   profile,
   onSave,
-  onEmailChange,
   onAvatarUpload,
   onAvatarRemove,
   className,
-  showEmailVerification = true,
 }: SettingsProfileProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
-  const [isChangingEmail, setIsChangingEmail] = useState(false);
-  const [showEmailChangeForm, setShowEmailChangeForm] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    profile?.avatar || null
+    profile?.avatar || null,
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -95,12 +121,59 @@ export default function SettingsProfile({
     location: profile?.location || "",
     website: profile?.website || "",
     socialLinks: profile?.socialLinks || [],
+    roles: profile?.roles || [], // ← add
   });
 
-  const [emailChangeData, setEmailChangeData] = useState({
-    newEmail: "",
-    currentPassword: "",
-  });
+  const handleDepartmentSelect = (value: string) => {
+    setFormData((prev) => ({ ...prev, department: value }));
+  };
+
+  const defaultRoleTags = [
+    { id: "frontend", label: "Frontend" },
+    { id: "backend", label: "Backend" },
+    { id: "fullstack", label: "Fullstack" },
+    { id: "mobile", label: "Mobile" },
+    { id: "devops", label: "DevOps" },
+    { id: "uiux", label: "UI/UX" },
+  ];
+
+  const [roleTags, setRoleTags] =
+    useState<{ id: string; label: string }[]>(defaultRoleTags);
+
+  const [newRole, setNewRole] = useState("");
+
+  const selectedRoles = formData.roles || [];
+
+  const handleRoleRemove = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      roles: (prev.roles || []).filter((r) => r !== value),
+    }));
+  };
+
+  const handleRoleSelect = (value: string) => {
+    setFormData((prev) => {
+      const roles = prev.roles || [];
+
+      if (roles.includes(value)) {
+        return { ...prev, roles: roles.filter((r) => r !== value) };
+      }
+      if (roles.length >= 2) return prev;
+
+      return { ...prev, roles: [...roles, value] };
+    });
+  };
+
+  const handleCreateRole = () => {
+    if ((formData.roles?.length || 0) >= 2 || !newRole.trim()) return;
+
+    setRoleTags((prev) => [...prev, { id: newRole, label: newRole }]);
+    setFormData((prev) => ({
+      ...prev,
+      roles: [...(prev.roles || []), newRole],
+    }));
+    setNewRole("");
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const avatarFileRef = useRef<File | null>(null);
@@ -142,7 +215,7 @@ export default function SettingsProfile({
         }
       }
     },
-    [onAvatarUpload]
+    [onAvatarUpload],
   );
 
   const handleAvatarClick = () => {
@@ -186,7 +259,7 @@ export default function SettingsProfile({
         handleAvatarSelect(file);
       }
     },
-    [handleAvatarSelect]
+    [handleAvatarSelect],
   );
 
   const handleFileInputChange = useCallback(
@@ -196,7 +269,7 @@ export default function SettingsProfile({
         handleAvatarSelect(file);
       }
     },
-    [handleAvatarSelect]
+    [handleAvatarSelect],
   );
 
   const handleSave = async () => {
@@ -240,50 +313,11 @@ export default function SettingsProfile({
     }
   };
 
-  const handleEmailChange = async () => {
-    setErrors({});
-
-    if (!emailChangeData.newEmail.trim()) {
-      setErrors({ newEmail: "New email is required" });
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(emailChangeData.newEmail)) {
-      setErrors({ newEmail: "Please enter a valid email address" });
-      return;
-    }
-
-    if (!emailChangeData.currentPassword.trim()) {
-      setErrors({ currentPassword: "Current password is required" });
-      return;
-    }
-
-    setIsChangingEmail(true);
-    try {
-      await onEmailChange?.(
-        emailChangeData.newEmail,
-        emailChangeData.currentPassword
-      );
-      setFormData((prev) => ({ ...prev, email: emailChangeData.newEmail }));
-      setEmailChangeData({ newEmail: "", currentPassword: "" });
-      setShowEmailChangeForm(false);
-      setErrors({});
-    } catch (error) {
-      setErrors({
-        emailChange:
-          error instanceof Error ? error.message : "Failed to change email",
-      });
-    } finally {
-      setIsChangingEmail(false);
-    }
-  };
-
   const updateSocialLink = (platform: string, url: string) => {
     setFormData((prev) => {
       const socialLinks = prev.socialLinks || [];
       const existingIndex = socialLinks.findIndex(
-        (link) => link.platform === platform
+        (link) => link.platform === platform,
       );
       const updatedLinks = [...socialLinks];
 
@@ -353,7 +387,7 @@ export default function SettingsProfile({
                   "relative flex size-24 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed transition-colors",
                   isUploadingAvatar
                     ? "border-primary bg-primary/5"
-                    : "border-muted bg-muted/30 hover:border-primary/50"
+                    : "border-muted bg-muted/30 hover:border-primary/50",
                 )}
                 onClick={handleAvatarClick}
                 onDragOver={handleDragOver}
@@ -403,6 +437,13 @@ export default function SettingsProfile({
                 <p className="text-muted-foreground text-xs">
                   Drag and drop an image here, or click to browse. Max size: 5MB
                 </p>
+                  <a
+                  href="https://faces.notion.com/"
+                  target="_blank"
+                  className="text-muted-foreground text-xs underline"
+                >
+                 Create your avatar here.
+                </a>
                 {errors.avatar && (
                   <p className="text-destructive text-xs">{errors.avatar}</p>
                 )}
@@ -446,7 +487,6 @@ export default function SettingsProfile({
                 <div className="flex flex-col gap-2">
                   <InputGroup>
                     <InputGroupInput
-                      disabled={showEmailChangeForm}
                       id="email"
                       onChange={(e) =>
                         setFormData((prev) => ({
@@ -459,153 +499,114 @@ export default function SettingsProfile({
                       value={formData.email}
                     />
                   </InputGroup>
-                  {showEmailVerification && (
-                    <Button
-                      className="w-full sm:w-auto"
-                      onClick={() =>
-                        setShowEmailChangeForm(!showEmailChangeForm)
-                      }
-                      type="button"
-                      variant="outline"
-                    >
-                      {showEmailChangeForm ? "Cancel" : "Change Email"}
-                    </Button>
-                  )}
                 </div>
-                {errors.email && <FieldError>{errors.email}</FieldError>}
               </FieldContent>
             </Field>
 
-            {showEmailChangeForm && (
-              <div className="flex flex-col gap-4 rounded-lg border bg-muted/30 p-4">
+            <div className="flex flex-col gap-4 md:flex-row md:gap-6">
+              {/* Roles */}
+              <div className="flex-1">
                 <Field>
-                  <FieldLabel htmlFor="new-email">
-                    New Email <span className="text-destructive">*</span>
-                  </FieldLabel>
+                  <FieldLabel>Roles</FieldLabel>
                   <FieldContent>
-                    <InputGroup>
-                      <InputGroupInput
-                        id="new-email"
-                        onChange={(e) =>
-                          setEmailChangeData((prev) => ({
-                            ...prev,
-                            newEmail: e.target.value,
-                          }))
-                        }
-                        placeholder="new.email@example.com"
-                        type="email"
-                        value={emailChangeData.newEmail}
-                      />
-                    </InputGroup>
-                    {errors.newEmail && (
-                      <FieldError>{errors.newEmail}</FieldError>
-                    )}
+                    <Tags className="w-full">
+                      <TagsTrigger>
+                        {selectedRoles.map((role) => (
+                          <TagsValue
+                            key={role}
+                            onRemove={() => handleRoleRemove(role)}
+                          >
+                            {roleTags.find((t) => t.id === role)?.label}
+                          </TagsValue>
+                        ))}
+                      </TagsTrigger>
+
+                      <TagsContent>
+                        <TagsInput
+                          onValueChange={setNewRole}
+                          placeholder="Search or create role..."
+                        />
+                        <TagsList>
+                          <TagsEmpty>
+                            <button
+                              type="button"
+                              className="mx-auto flex items-center gap-2"
+                              onClick={handleCreateRole}
+                            >
+                              <PlusIcon size={14} />
+                              Create role: {newRole}
+                            </button>
+                          </TagsEmpty>
+
+                          <TagsGroup>
+                            {roleTags.map((tag) => (
+                              <TagsItem
+                                key={tag.id}
+                                value={tag.id}
+                                onSelect={handleRoleSelect}
+                              >
+                                {tag.label}
+                                {selectedRoles.includes(tag.id) && (
+                                  <CheckIcon size={14} />
+                                )}
+                              </TagsItem>
+                            ))}
+                          </TagsGroup>
+                        </TagsList>
+                      </TagsContent>
+                    </Tags>
                   </FieldContent>
                 </Field>
-
-                <Field>
-                  <FieldLabel htmlFor="current-password">
-                    Current Password <span className="text-destructive">*</span>
-                  </FieldLabel>
-                  <FieldContent>
-                    <InputGroup>
-                      <InputGroupInput
-                        id="current-password"
-                        onChange={(e) =>
-                          setEmailChangeData((prev) => ({
-                            ...prev,
-                            currentPassword: e.target.value,
-                          }))
-                        }
-                        placeholder="Enter your current password"
-                        type="password"
-                        value={emailChangeData.currentPassword}
-                      />
-                    </InputGroup>
-                    {errors.currentPassword && (
-                      <FieldError>{errors.currentPassword}</FieldError>
-                    )}
-                    {errors.emailChange && (
-                      <FieldError>{errors.emailChange}</FieldError>
-                    )}
-                  </FieldContent>
-                </Field>
-
-                <Button
-                  className="w-full sm:w-auto"
-                  disabled={isChangingEmail}
-                  onClick={handleEmailChange}
-                  type="button"
-                >
-                  {isChangingEmail ? (
-                    <>
-                      <Loader2 className="size-4 animate-spin" />
-                      Changing…
-                    </>
-                  ) : (
-                    "Update Email"
-                  )}
-                </Button>
               </div>
-            )}
 
-            <Field>
-              <FieldLabel htmlFor="bio">Bio</FieldLabel>
-              <FieldContent>
-                <Textarea
-                  id="bio"
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, bio: e.target.value }))
-                  }
-                  placeholder="Tell us about yourself..."
-                  rows={4}
-                  value={formData.bio || ""}
-                />
-                <FieldDescription>
-                  A brief description about yourself (max 500 characters)
-                </FieldDescription>
-              </FieldContent>
-            </Field>
+              {/* Department */}
+              <div className="flex-1">
+                <Field>
+                  <FieldLabel>Department</FieldLabel>
+                  <FieldContent>
+                    <Tags className="w-full">
+                      <TagsTrigger>
+                        {formData.department && (
+                          <TagsValue
+                            onRemove={() =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                department: undefined,
+                              }))
+                            }
+                          >
+                            {
+                              departmentOptions.find(
+                                (d) => d.id === formData.department,
+                              )?.label
+                            }
+                          </TagsValue>
+                        )}
+                      </TagsTrigger>
 
-            <Field>
-              <FieldLabel htmlFor="location">Location</FieldLabel>
-              <FieldContent>
-                <InputGroup>
-                  <InputGroupInput
-                    id="location"
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        location: e.target.value,
-                      }))
-                    }
-                    placeholder="City, Country"
-                    value={formData.location || ""}
-                  />
-                </InputGroup>
-              </FieldContent>
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="website">Website</FieldLabel>
-              <FieldContent>
-                <InputGroup>
-                  <InputGroupInput
-                    id="website"
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        website: e.target.value,
-                      }))
-                    }
-                    placeholder="https://example.com"
-                    type="url"
-                    value={formData.website || ""}
-                  />
-                </InputGroup>
-                {errors.website && <FieldError>{errors.website}</FieldError>}
-              </FieldContent>
-            </Field>
+                      <TagsContent>
+                        <TagsList>
+                          <TagsGroup>
+                            {departmentOptions.map((dept) => (
+                              <TagsItem
+                                key={dept.id}
+                                value={dept.id}
+                                onSelect={() => handleDepartmentSelect(dept.id)}
+                              >
+                                {dept.label}
+                                {formData.department === dept.id && (
+                                  <CheckIcon size={14} />
+                                )}
+                              </TagsItem>
+                            ))}
+                          </TagsGroup>
+                        </TagsList>
+                      </TagsContent>
+                    </Tags>
+                  </FieldContent>
+                </Field>
+              </div>
+            </div>
           </div>
 
           <Separator />

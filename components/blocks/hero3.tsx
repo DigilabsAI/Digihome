@@ -179,6 +179,7 @@ const Hero3 = ({
             <Image
               src="/MessyDoodle.svg"
               alt="placeholder hero"
+              
               width={1200}
               height={800}
               className="max-h-[600px] w-full rounded-md object-cover lg:max-h-[800px] filter dark:invert"

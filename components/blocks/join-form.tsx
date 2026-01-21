@@ -6,44 +6,58 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Image from "next/image";
 import { toast } from "sonner";
-
+import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Tags,
+  TagsContent,
+  TagsEmpty,
+  TagsGroup,
+  TagsInput,
+  TagsItem,
+  TagsTrigger,
+  TagsValue,
+  TagsList,
+} from "@/components/kibo-ui/tags";
+import { CheckIcon, PlusIcon } from "lucide-react";
 
 import { PiCheckLight } from "react-icons/pi";
 import NeobruCard from "../ui/neobruCard";
+import { submitJoinForm } from "@/lib/actions/joinFormAction";
+import Loader from "../ui/loader";
+import { TextVariants } from "./projectSection";
 
-const FormSchema = z.object({
-  first_name: z.string(),
-  last_name: z.string(),
-  email: z.string().email(),
-  job_title: z.string().optional(),
-  company_name: z.string(),
-  help: z.enum([
-    "Evaluate Bird for my company",
-    "Learn More",
-    "Get a Quote",
-    "How to use Bird",
-    "Other",
-  ]),
-  company_size: z.enum([
-    "1-10",
-    "11-50",
-    "51-200",
-    "201-500",
-    "501-1000",
-    "1000+",
-  ]),
-  info: z.string(),
+const defaultCompanySizeOptions = [
+  "Frontend Developer",
+  "Backend Developer",
+  "Fullstack Developer",
+  "Project Manager",
+  "UI/UX Designer",
+  "Technical Writer",
+  "DevOps Engineer",
+  "QA / Tester",
+];
+const defaultHelpOptions = [
+  "Social media",
+  "Friend or colleague",
+  "Search engine",
+  "Events",
+];
+
+export const FormSchema = z.object({
+  full_name: z.string().min(1, "Full name is required"),
+  email: z.string().email("Invalid email"),
+  school: z.string().min(1, "School is required"),
+  position: z
+    .array(z.string())
+    .min(1, "At least one role/position must be selected"),
+  refferer: z
+    .array(z.string())
+    .min(1, "Please select at least one way you found us"),
+  reason: z.string().min(1, "Motivation is required"),
 });
 
 type FormValues = z.infer<typeof FormSchema>;
@@ -51,186 +65,352 @@ type FormValues = z.infer<typeof FormSchema>;
 export default function JoinForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [isApplicant, setIsApplicant] = useState(false);
 
-  const { register, handleSubmit, setValue, watch } = useForm<FormValues>({
+  const [companySizeOptions, setCompanySizeOptions] = useState(
+    defaultCompanySizeOptions,
+  );
+  const [companySizeTags, setCompanySizeTags] = useState<string[]>([]);
+  const [companySizeInput, setCompanySizeInput] = useState("");
+
+  const [helpOptions, setHelpOptions] = useState(defaultHelpOptions);
+  const [helpTags, setHelpTags] = useState<string[]>([]);
+  const [helpInput, setHelpInput] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      first_name: "",
-      last_name: "",
+      full_name: "",
       email: "",
-      company_name: "",
-      help: "Learn More",
-      company_size: "1-10",
-      info: "",
+      school: "",
+      position: [],
+      refferer: [],
+      reason: "",
     },
   });
 
-  async function onSubmit(data: FormValues) {
+  const handleTagChange = (
+    selected: string[],
+    field: "position" | "refferer",
+  ) => {
+    setValue(field, selected);
+    if (field === "position") setCompanySizeTags(selected);
+    else setHelpTags(selected);
+  };
+
+  const handleCreateTag = (newTag: string, field: "position" | "refferer") => {
+    if (!newTag.trim()) return;
+
+    if (field === "position") {
+      if (!companySizeOptions.includes(newTag)) {
+        setCompanySizeOptions((prev) => [...prev, newTag]);
+      }
+      const updated = [...companySizeTags, newTag];
+      setCompanySizeTags(updated);
+      setValue("position", updated);
+      setCompanySizeInput("");
+    } else {
+      if (!helpOptions.includes(newTag)) {
+        setHelpOptions((prev) => [...prev, newTag]);
+      }
+      const updated = [...helpTags, newTag];
+      setHelpTags(updated);
+      setValue("refferer", updated);
+      setHelpInput("");
+    }
+  };
+  const onSubmit = async (data: FormValues) => {
     try {
       setLoading(true);
+      const result = await submitJoinForm(data);
 
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      if (result?.success === true) {
+        setSubmitted(true);
+        toast.success("Form submitted successfully");
+        return;
+      }
 
-      if (!res.ok) throw new Error();
-
-      setSubmitted(true);
-      toast.success("Message sent successfully");
+      reset();
+      setCompanySizeTags([]);
+      setHelpTags([]);
+      toast.error(result?.error || "Something went wrong");
     } catch {
+      reset();
+      setCompanySizeTags([]);
+      setHelpTags([]);
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="md:flex justify-center pt-24 px-8">
-      <div>
-        <div className="text-5xl font-medium w-2/3">Contact our sales team</div>
-        <div className="py-4 text-gray-500">
-          Let&apos;s talk about how Bird can help your team work better.
-        </div>
-
-        <div className="bg-[#f6f5f4] md:w-4/5 space-y-6 p-4 rounded-lg my-4">
-          {[
-            "One flexible tool for your entire company to share knowledge, ship projects, and collaborate.",
-            "Enterprise features to securely manage user access and security.",
-            "Dedicated support to work with you on your setup and help you build the best plan for your company.",
-          ].map((text, i) => (
-            <div key={i} className="flex gap-4 border-b last:border-none">
-              <PiCheckLight className="text-2xl" />
-              <div className="font-normal pb-4 w-80">{text}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
+    <>
+      {" "}
       {!submitted ? (
-        <NeobruCard className="p-8">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="md:flex gap-6">
-              <div className="w-full">
-                <label className="text-sm">First name *</label>
-                <Input {...register("first_name")} />
-              </div>
-
-              <div className="w-full">
-                <label className="text-sm">Last name *</label>
-                <Input {...register("last_name")} />
-              </div>
+        <motion.div
+          variants={TextVariants}
+          viewport={{ once: true, amount: 0.5 }}
+          whileInView="visible"
+          initial="hidden"
+          className="md:flex justify-center pt-24 pb-16 px-8"
+        >
+          <div>
+            <div className="text-5xl font-medium w-2/3">
+              Contact our sales team
+            </div>
+            <div className="py-3 text-gray-500">
+              Let&apos;s talk about how Bird can help your team work better.
             </div>
 
-            <div>
-              <label className="text-sm">Work email *</label>
-              <Input {...register("email")} />
-            </div>
-
-            <div>
-              <label className="text-sm">Company name *</label>
-              <Input {...register("company_name")} />
-            </div>
-
-            <div className="flex items-center justify-evenly gap-6 md:flex-nowrap flex-wrap">
-              <div className="w-full">
-                <label className="text-sm">Company size *</label>
-                <Select
-                  value={watch("company_size")}
-                  onValueChange={(v) =>
-                    setValue("company_size", v as FormValues["company_size"])
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {["1-10", "11-50", "51-200", "501-1000", "1000+"].map(
-                      (v) => (
-                        <SelectItem key={v} value={v}>
-                          {v}
-                        </SelectItem>
-                      )
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="w-full">
-                <label className="text-sm">How can we help?</label>
-                <Select
-                  value={watch("help")}
-                  onValueChange={(v) =>
-                    setValue("help", v as FormValues["help"])
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {[
-                      "Evaluate Bird for my company",
-                      "Learn More",
-                      "Get a Quote",
-                      "How to use Bird",
-                      "Other",
-                    ].map((v) => (
-                      <SelectItem key={v} value={v}>
-                        {v}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div>
-              <label className="text-sm">Anything else?</label>
-              <Textarea style={{ height: "100px" }} {...register("info")} />
-            </div>
-
-            <div className="flex gap-4 items-center">
-              <p className="text-xs text-foreground/60">
-                By submitting this form you agree to our{" "}
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  //TODO: Update privacy policy link
-                  href="#"
-                  className="text-foreground underline decoration-border/70 underline-offset-4 transition-colors hover:text-primary"
-                >
-                  privacy policy
-                </a>
-                .
-              </p>
-            </div>
-
-            <Button
-              type="submit"
-              disabled={loading}
-              className="text-sm font-light w-full"
-            >
-              Submit
-            </Button>
-          </form>
-        </NeobruCard>
-      ) : (
-        <div className="text-xl md:text-2xl flex justify-center px-8">
-          <div className="w-80 text-center">
-            <Image
-              src="/assets/MeditatingDoodle.svg"
-              alt="logo"
-              width={1000}
-              height={1000}
-              className="mx-auto"
-            />
-            <div className="text-gray-500 font-light py-10">
-              We&apos;ve received your inquiry and will contact you shortly.
+            <div className="bg-[#f6f5f4] md:w-4/5 space-y-6 p-4 rounded-lg my-4">
+              {[
+                "One flexible tool for your entire company to share knowledge, ship projects, and collaborate.",
+                "Enterprise features to securely manage user access and security.",
+                "Dedicated support to work with you on your setup and help you build the best plan for your company.",
+                "Dedicated support to work with you on your setup and help you build the best plan for your company.",
+              ].map((text, i) => (
+                <div key={i} className="flex gap-4 border-b last:border-none">
+                  <PiCheckLight className="text-2xl" />
+                  <div className="font-normal pb-4 w-80 ">{text}</div>
+                </div>
+              ))}
             </div>
           </div>
+
+          <NeobruCard className="p-8">
+            {loading && <Loader />}
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="space-y-4 w-80 md:w-96"
+            >
+              <div>
+                <label className="text-sm">Fullname *</label>
+                <Input {...register("full_name")} />
+                {errors.full_name && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.full_name.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="text-sm">Working email *</label>
+                <Input {...register("email")} />
+                {errors.email && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="text-sm">
+                  Current/Last School Attended *
+                </label>
+                <Input {...register("school")} />
+                {errors.school && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.school.message}
+                  </p>
+                )}
+              </div>
+              {/* Role / Position */}
+              <div className="w-full">
+                <label className="text-sm">Role / Position *</label>
+                {errors.position && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.position.message}
+                  </p>
+                )}
+                <Tags className="max-w-full">
+                  <TagsTrigger>
+                    {companySizeTags.map((tag) => (
+                      <TagsValue
+                        key={tag}
+                        onRemove={() =>
+                          handleTagChange(
+                            companySizeTags.filter((t) => t !== tag),
+                            "position",
+                          )
+                        }
+                      >
+                        {tag}
+                      </TagsValue>
+                    ))}
+                  </TagsTrigger>
+                  <TagsContent>
+                    <TagsInput
+                      placeholder="Type or select..."
+                      value={companySizeInput}
+                      onValueChange={setCompanySizeInput}
+                    />
+                    <TagsList>
+                      <TagsEmpty>
+                        <button
+                          type="button"
+                          className="mx-auto flex cursor-pointer items-center gap-2"
+                          onClick={() =>
+                            handleCreateTag(companySizeInput, "position")
+                          }
+                        >
+                          <PlusIcon size={14} /> Create: {companySizeInput}
+                        </button>
+                      </TagsEmpty>
+                      <TagsGroup>
+                        {companySizeOptions.map((tag) => (
+                          <TagsItem
+                            key={tag}
+                            value={tag}
+                            onSelect={() =>
+                              handleTagChange(
+                                companySizeTags.includes(tag)
+                                  ? companySizeTags.filter((t) => t !== tag)
+                                  : [...companySizeTags, tag],
+                                "position",
+                              )
+                            }
+                          >
+                            {tag}
+                            {companySizeTags.includes(tag) && (
+                              <CheckIcon size={14} />
+                            )}
+                          </TagsItem>
+                        ))}
+                      </TagsGroup>
+                    </TagsList>
+                  </TagsContent>
+                </Tags>
+              </div>
+
+              {/* How did you find us */}
+              <div className="w-full">
+                <label className="text-sm">How did you find us? *</label>
+                {errors.refferer && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.refferer.message}
+                  </p>
+                )}
+                <Tags className="max-w-full">
+                  <TagsTrigger>
+                    {helpTags.map((tag) => (
+                      <TagsValue
+                        key={tag}
+                        onRemove={() =>
+                          handleTagChange(
+                            helpTags.filter((t) => t !== tag),
+                            "refferer",
+                          )
+                        }
+                      >
+                        {tag}
+                      </TagsValue>
+                    ))}
+                  </TagsTrigger>
+                  <TagsContent>
+                    <TagsInput
+                      placeholder="Type or select..."
+                      value={helpInput}
+                      onValueChange={setHelpInput}
+                    />
+                    <TagsList>
+                      <TagsEmpty>
+                        <button
+                          type="button"
+                          className="mx-auto flex cursor-pointer items-center gap-2"
+                          onClick={() => handleCreateTag(helpInput, "refferer")}
+                        >
+                          <PlusIcon size={14} /> Create: {helpInput}
+                        </button>
+                      </TagsEmpty>
+                      <TagsGroup>
+                        {helpOptions.map((tag) => (
+                          <TagsItem
+                            key={tag}
+                            value={tag}
+                            onSelect={() =>
+                              handleTagChange(
+                                helpTags.includes(tag)
+                                  ? helpTags.filter((t) => t !== tag)
+                                  : [...helpTags, tag],
+                                "refferer",
+                              )
+                            }
+                          >
+                            {tag}
+                            {helpTags.includes(tag) && <CheckIcon size={14} />}
+                          </TagsItem>
+                        ))}
+                      </TagsGroup>
+                    </TagsList>
+                  </TagsContent>
+                </Tags>
+              </div>
+
+              <div>
+                <label className="text-sm">Tell us your motivation</label>
+                <Textarea style={{ height: "80px" }} {...register("reason")} />
+                {errors.reason && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.reason.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex gap-4 items-center">
+                <p className="text-xs text-foreground/60">
+                  By submitting this form you agree to our{" "}
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="#"
+                    className="text-foreground underline decoration-border/70 underline-offset-4 transition-colors hover:text-primary"
+                  >
+                    privacy policy
+                  </a>
+                  .
+                </p>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={loading}
+                className="text-sm font-light w-full"
+              >
+                Submit
+              </Button>
+            </form>
+          </NeobruCard>
+        </motion.div>
+      ) : (
+        <div className="text-xl md:text-2xl h-screen w-full flex items-center justify-center px-8">
+          <motion.div
+            className="text-center"
+            variants={TextVariants}
+            viewport={{ once: true, amount: 0.5 }}
+            whileInView="visible"
+            initial="hidden"
+          >
+            <Image
+              src="/MessyDoodle.svg"
+              alt="logo"
+              width={400}
+              height={400}
+              className="mx-auto"
+            />
+            <div className="text-gray-500 font-light py-10 max-w-lg">
+              Your application has been successfully submitted. Digilabs will
+              reach out to you soon with further information.
+            </div>
+          </motion.div>
         </div>
       )}
-    </div>
+    </>
   );
 }
