@@ -49,7 +49,7 @@ const defaultHelpOptions = [
 
 export const FormSchema = z.object({
   full_name: z.string().min(1, "Full name is required"),
-  email: z.string().email("Invalid email"),
+  email: z.string().email("Invalid email").min(1, "Email is required"),
   school: z.string().min(1, "School is required"),
   position: z
     .array(z.string())

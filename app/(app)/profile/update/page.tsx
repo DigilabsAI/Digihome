@@ -1,9 +1,11 @@
-import SettingsProfile from "../../AppComponents/settings-profile";
+import { Suspense } from "react";
+import UpdateProfileContent from "../../AppComponents/updateProfileContent";
+import ProfileSkeleton from "@/components/skeletons/profileSkeleton";
 
 export default function ProfileUpdatePage() {
   return (
-    <div className="mx-auto max-w-3xl p-4 sm:p-6 lg:p-8">
-      <SettingsProfile />
-    </div>
+    <Suspense fallback={<ProfileSkeleton />}>
+      <UpdateProfileContent />
+    </Suspense>
   );
 }

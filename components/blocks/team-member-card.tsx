@@ -1,8 +1,7 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, Twitter } from "lucide-react";
+import { Github, Linkedin, User2, Twitter } from "lucide-react";
 import { VercelCard } from "../ui/vercel-card";
 import NeobruCard from "../ui/neobruCard";
 
@@ -13,12 +12,11 @@ export type TeamMember = {
   department?: string;
   image: string;
   skills: string[];
-  gradient: string;
   social: {
     twitter?: string;
     linkedin?: string;
     github?: string;
-    email?: string;
+    website?: string;
   };
 };
 
@@ -28,13 +26,9 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
       <div className="relative z-10 px-6">
         {/* Avatar */}
         <div className="mb-4 flex justify-center">
-          <motion.div
-            className="relative w-full"
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          >
+          <div className="relative w-full transform transition-transform duration-300 hover:scale-105">
             <NeobruCard className="relative h-44 w-full overflow-hidden p-1 md:p-0 bg-card/80">
-              <motion.div className="relative h-full w-full">
+              <div className="relative h-full w-full">
                 <Image
                   src={member.image}
                   alt={member.name}
@@ -43,9 +37,9 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
                   className="object-cover aspect-square"
                   priority
                 />
-              </motion.div>
+              </div>
             </NeobruCard>
-          </motion.div>
+          </div>
         </div>
 
         {/* Info */}
@@ -80,17 +74,70 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
           </div>
 
           {/* Socials */}
-          <div className="flex justify-center">
-            {[Twitter, Linkedin, Github, Mail].map((Icon, i) => (
-              <Button
-                key={i}
-                size="icon"
-                variant="ghost"
-                className="h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background hover:border-secondary-foreground hover:text-primary"
+          <div className="flex justify-center gap-1">
+            {member.social.twitter && (
+              <a
+                href={member.social.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Icon className="h-4 w-4" />
-              </Button>
-            ))}
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background hover:border-secondary-foreground hover:text-primary transition-colors duration-300"
+                >
+                  <Twitter className="h-4 w-4" />
+                </Button>
+              </a>
+            )}
+
+            {member.social.linkedin && (
+              <a
+                href={member.social.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background hover:border-secondary-foreground hover:text-primary transition-colors duration-300"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </Button>
+              </a>
+            )}
+
+            {member.social.github && (
+              <a
+                href={member.social.github}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background hover:border-secondary-foreground hover:text-primary transition-colors duration-300"
+                >
+                  <Github className="h-4 w-4" />
+                </Button>
+              </a>
+            )}
+
+            {member.social.website && (
+              <a
+                href={member.social.website}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background hover:border-secondary-foreground hover:text-primary transition-colors duration-300"
+                >
+                  <User2 className="h-4 w-4" />
+                </Button>
+              </a>
+            )}
           </div>
         </div>
       </div>

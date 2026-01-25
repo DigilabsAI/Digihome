@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { InfoIcon } from "lucide-react";
 import { Suspense } from "react";
-import UserRole from "../AppComponents/userRole";
 
 async function UserDetails() {
   const supabase = await createClient();
@@ -17,8 +16,6 @@ async function UserDetails() {
 }
 
 export default async function ProtectedPage() {
-
-
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
       <div className="w-full">
@@ -31,7 +28,6 @@ export default async function ProtectedPage() {
         <h2 className="font-bold text-2xl mb-4"> User details</h2>
         <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
           <Suspense>
-            <UserRole />
             <UserDetails />
           </Suspense>
         </pre>

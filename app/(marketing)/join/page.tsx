@@ -1,11 +1,11 @@
 import JoinSection from "@/components/blocks/joinSection";
-import Loader from "@/components/ui/loader";
+import JoinSectionSkeleton from "@/components/skeletons/joinSectionSkeleton";
 import { Suspense } from "react";
 
 export default function JoinPage() {
   return (
     <div>
-      <Suspense fallback={<Loader />}>
+      <Suspense fallback={<JoinSectionSkeleton />}>
         <JoinSection />
       </Suspense>
     </div>

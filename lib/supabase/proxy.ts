@@ -1,36 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-const PUBLIC_PATHS = ["/", "/about", "/contact", "/projects", "/profile/update"];
-const AUTH_PATH_PREFIX = "/auth";
+const PUBLIC_PREFIXES = [
+  "/auth",
+  "/",
+  "/about",
+  "/contact",
+  "/projects",
+  "/join",
+  "/profile",
+];
 
 const ROLE_ALLOWLIST: Record<string, string[]> = {
-  "non-member": [
-    "/join",
-  ],
-  "member": [
-    "/dashboard",
-    "/projects",
-    "/projects/",
-    "/profile",
-    "/settings",
-    "/profile",
-  ],
-  admin: [
-    "/", 
-  ],
+  "non-member": ["/join"],
+  member: ["/dashboard", "/projects", "/profile", "/settings","/join"],
+  admin: ["/"],
 };
+  
+function isPublic(pathname: string) {
+  return PUBLIC_PREFIXES.some(p => pathname === p || pathname.startsWith(p));
+}
+
+function canAccess(pathname: string, role: string) {
+  const allowed = ROLE_ALLOWLIST[role] ?? [];
+  return allowed.some(p => pathname === p || pathname.startsWith(p));
+}
 
 export async function updateSession(request: NextRequest) {
-  const response = NextResponse.next({ request });
   const { pathname } = request.nextUrl;
+  const response = NextResponse.next({ request });
 
-  if (
-    pathname.startsWith(AUTH_PATH_PREFIX) ||
-    PUBLIC_PATHS.includes(pathname)
-  ) {
-    return response;
-  }
+  if (isPublic(pathname)) return response;
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -43,10 +43,7 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
@@ -60,24 +57,12 @@ export async function updateSession(request: NextRequest) {
   const role = data?.role ?? "non-member";
   const setupDone = data?.is_setup_done ?? false;
 
-
-  if (!setupDone && role == "member" && pathname !== "/profile") {
-    return NextResponse.redirect(new URL("/profile", request.url));
+  // onboarding guard (loop-safe)
+  if (role === "member" && !setupDone && !pathname.startsWith("/profile")) {
+    return NextResponse.redirect(new URL("/profile/update", request.url));
   }
 
-
-  if (role === "admin") {
-    return response;
-  }
-
-
-  const allowedPaths = ROLE_ALLOWLIST[role] ?? [];
-  const isAllowed = allowedPaths.some(
-    (allowed) =>
-      pathname === allowed || pathname.startsWith(allowed)
-  );
-
-  if (!isAllowed) {
+  if (!canAccess(pathname, role)) {
     return NextResponse.redirect(new URL("/join", request.url));
   }
 
