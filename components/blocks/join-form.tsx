@@ -65,8 +65,7 @@ type FormValues = z.infer<typeof FormSchema>;
 export default function JoinForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [isApplicant, setIsApplicant] = useState(false);
-
+  
   const [companySizeOptions, setCompanySizeOptions] = useState(
     defaultCompanySizeOptions,
   );
@@ -191,8 +190,8 @@ export default function JoinForm() {
               className="space-y-4 w-80 md:w-96"
             >
               <div>
-                <label className="text-sm">Fullname *</label>
-                <Input {...register("full_name")} />
+                <label className="text-sm">Fullname </label>
+                <Input {...register("full_name")}  placeholder="John Doe"/>
                 {errors.full_name && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.full_name.message}
@@ -201,8 +200,8 @@ export default function JoinForm() {
               </div>
 
               <div>
-                <label className="text-sm">Working email *</label>
-                <Input {...register("email")} />
+                <label className="text-sm">Working email </label>
+                <Input {...register("email")} placeholder="johndoe@example.com" />
                 {errors.email && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.email.message}
@@ -212,9 +211,9 @@ export default function JoinForm() {
 
               <div>
                 <label className="text-sm">
-                  Current/Last School Attended *
+                  Current/Last School Attended 
                 </label>
-                <Input {...register("school")} />
+                <Input {...register("school")} placeholder="EVSU"/>
                 {errors.school && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.school.message}
@@ -223,7 +222,7 @@ export default function JoinForm() {
               </div>
               {/* Role / Position */}
               <div className="w-full">
-                <label className="text-sm">Role / Position *</label>
+                <label className="text-sm">Role / Position </label>
                 {errors.position && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.position.message}
@@ -291,7 +290,7 @@ export default function JoinForm() {
 
               {/* How did you find us */}
               <div className="w-full">
-                <label className="text-sm">How did you find us? *</label>
+                <label className="text-sm">How did you find us? </label>
                 {errors.refferer && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.refferer.message}
@@ -354,8 +353,8 @@ export default function JoinForm() {
               </div>
 
               <div>
-                <label className="text-sm">Tell us your motivation</label>
-                <Textarea style={{ height: "80px" }} {...register("reason")} />
+                <label className="text-sm">Tell us your motivation on joining.</label>
+                <Textarea style={{ height: "80px" }} {...register("reason")} placeholder="to gain experience and ..." />
                 {errors.reason && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.reason.message}

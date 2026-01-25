@@ -109,8 +109,7 @@ export const elegantTeamMembers: TeamMember[] = [
         bio: "Visionary leader with 15+ years in tech",
         image: "/avs1.png",
         skills: ["Strategy", "Leadership"],
-        gradient: "from-white/10 via-white/5 to-transparent",
-        social: { twitter: "#", linkedin: "#", github: "#", email: "#" },
+        social: { twitter: "#", linkedin: "#", github: "#", website: "#" },
     },
     {
         name: "Michael Chen",
@@ -119,8 +118,7 @@ export const elegantTeamMembers: TeamMember[] = [
         bio: "Full-stack architect and AI enthusiast",
         image: "/avs2.png",
         skills: ["AI/ML", "Architecture"],
-        gradient: "from-white/12 via-white/5 to-transparent",
-        social: { twitter: "#", linkedin: "#", github: "#", email: "michael@example.com" },
+        social: { twitter: "#", linkedin: "#", github: "#", website: "michael@example.com" },
     },
     {
         name: "Emily Rodriguez",
@@ -129,8 +127,7 @@ export const elegantTeamMembers: TeamMember[] = [
         bio: "Creative mind behind beautiful interfaces",
         image: "/avs3.png",
         skills: ["UI/UX", "Branding"],
-        gradient: "from-white/12 via-white/5 to-transparent",
-        social: { twitter: "#", linkedin: "#", github: "#", email: "#" },
+        social: { twitter: "#", linkedin: "#", github: "#", website: "#" },
     },
     {
         name: "David Park",
@@ -139,8 +136,7 @@ export const elegantTeamMembers: TeamMember[] = [
         bio: "Code wizard and performance optimizer",
         image: "/avs4.png",
         skills: ["React", "TypeScript"],
-        gradient: "from-foreground/12 via-foreground/5 to-transparent",
-        social: { twitter: "#", linkedin: "#", github: "#", email: "david@example.com" },
+        social: { twitter: "#", linkedin: "#", github: "#", website: "david@example.com" },
     },
 ];
 
