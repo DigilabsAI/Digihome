@@ -33,10 +33,6 @@ export async function saveProfile(data: {
             { onConflict: "user_id" }
         );
 
-    if (profileError) {
-        console.error("Error updating profile:", profileError);
-        throw new Error(profileError.message);
-    }
 
     // 2. Mark setup as done
     const { error: userError } = await supabase
@@ -44,10 +40,7 @@ export async function saveProfile(data: {
         .update({ is_setup_done: true })
         .eq("id", user.id);
 
-    if (userError) {
-        console.error("Error updating user setup state:", userError);
-        throw new Error(userError.message);
-    }
+
 }
 
 
@@ -111,7 +104,7 @@ export async function getProfile() {
         .eq("user_id", user.id)
         .single();
 
-    if (error) throw new Error(error.message);
+
 
     return data;
 }

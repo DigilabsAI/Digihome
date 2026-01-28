@@ -1,6 +1,6 @@
 "use server";
 
-import { z } from "zod";
+import { email, z } from "zod";
 import nodemailer from 'nodemailer';
 import { getCurrentUser } from "./userAction";
 
@@ -31,6 +31,7 @@ if (recipients.length === 0) {
       user_id: user.id,
       full_name: data.full_name,
       reason: data.reason,
+      email: data.email,
       school: data.school,
       referrers: data.refferer ?? [],
       positions: data.position,
@@ -38,9 +39,7 @@ if (recipients.length === 0) {
     .select()
     .single();
 
-  if (error) throw error;
-
-
+  
   try {
 
     const transporter = nodemailer.createTransport({
@@ -75,7 +74,7 @@ if (recipients.length === 0) {
     };
 
   } catch (err) {
-    console.error(err);
+   
     return {
       success: false,
       error: "Opps! Something went wrong."

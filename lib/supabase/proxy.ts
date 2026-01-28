@@ -12,13 +12,17 @@ const PUBLIC_PREFIXES = [
 ];
 
 const ROLE_ALLOWLIST: Record<string, string[]> = {
-  "non-member": ["/join"],
-  member: ["/dashboard", "/projects", "/profile", "/settings","/join"],
+  "non-member": ["/join","/dashboard"],
+  member: ["/dashboard", "/projects", "/profile", "/settings", "/join"],
   admin: ["/"],
 };
-  
+
 function isPublic(pathname: string) {
-  return PUBLIC_PREFIXES.some(p => pathname === p || pathname.startsWith(p));
+  return PUBLIC_PREFIXES.some(p =>
+    p === "/"
+      ? pathname === "/"
+      : pathname === p || pathname.startsWith(p + "/")
+  );
 }
 
 function canAccess(pathname: string, role: string) {
@@ -38,7 +42,7 @@ export async function updateSession(request: NextRequest) {
     {
       cookies: {
         getAll: () => request.cookies.getAll(),
-        setAll: () => {},
+        setAll: () => { },
       },
     }
   );

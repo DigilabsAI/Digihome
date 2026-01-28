@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Github, Linkedin, User2, Twitter } from "lucide-react";
 import { VercelCard } from "../ui/vercel-card";
 import NeobruCard from "../ui/neobruCard";
+import { cn } from "@/lib/utils"; // assuming you have cn utility
 
 export type TeamMember = {
   name: string;
@@ -22,11 +23,15 @@ export type TeamMember = {
 
 function TeamMemberCard({ member }: { member: TeamMember }) {
   return (
-    <VercelCard className="relative h-full min-w-52 max-w-xs overflow-hidden border border-black/[0.4] bg-card backdrop-blur-xl transition-shadow duration-500">
+    <VercelCard
+      className={cn(
+        "relative max-w-xs w-full overflow-hidden border border-black/[0.4] bg-card backdrop-blur-xl transition-shadow duration-500"
+      )}
+    >
       <div className="relative z-10 px-6">
         {/* Avatar */}
         <div className="mb-4 flex justify-center">
-          <div className="relative w-full transform transition-transform duration-300 hover:scale-105">
+          <div className="relative w-full transition-transform duration-300 hover:scale-105">
             <NeobruCard className="relative h-44 w-full overflow-hidden p-1 md:p-0 bg-card/80">
               <div className="relative h-full w-full">
                 <Image
@@ -56,7 +61,7 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
           </Badge>
 
           {/* Bio */}
-          <p className="mb-4 max-w-xs mx-auto text-sm leading-relaxed text-secondary-foreground/90">
+          <p className="mb-4 text-sm leading-relaxed text-secondary-foreground/90">
             {member.bio}
           </p>
 
@@ -76,63 +81,56 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
           {/* Socials */}
           <div className="flex justify-center gap-1">
             {member.social.twitter && (
-              <a
-                href={member.social.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={member.social.twitter} target="_blank" rel="noopener noreferrer">
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background hover:border-secondary-foreground hover:text-primary transition-colors duration-300"
+                  className={cn(
+                    "h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background",
+                    "hover:border-secondary-foreground hover:text-primary transition-colors duration-300"
+                  )}
                 >
                   <Twitter className="h-4 w-4" />
                 </Button>
               </a>
             )}
-
             {member.social.linkedin && (
-              <a
-                href={member.social.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer">
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background hover:border-secondary-foreground hover:text-primary transition-colors duration-300"
+                  className={cn(
+                    "h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background",
+                    "hover:border-secondary-foreground hover:text-primary transition-colors duration-300"
+                  )}
                 >
                   <Linkedin className="h-4 w-4" />
                 </Button>
               </a>
             )}
-
             {member.social.github && (
-              <a
-                href={member.social.github}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={member.social.github} target="_blank" rel="noopener noreferrer">
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background hover:border-secondary-foreground hover:text-primary transition-colors duration-300"
+                  className={cn(
+                    "h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background",
+                    "hover:border-secondary-foreground hover:text-primary transition-colors duration-300"
+                  )}
                 >
                   <Github className="h-4 w-4" />
                 </Button>
               </a>
             )}
-
             {member.social.website && (
-              <a
-                href={member.social.website}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={member.social.website} target="_blank" rel="noopener noreferrer">
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background hover:border-secondary-foreground hover:text-primary transition-colors duration-300"
+                  className={cn(
+                    "h-8 w-8 rounded-none border-2 border-background bg-secondary-foreground text-background",
+                    "hover:border-secondary-foreground hover:text-primary transition-colors duration-300"
+                  )}
                 >
                   <User2 className="h-4 w-4" />
                 </Button>
