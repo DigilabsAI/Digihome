@@ -65,7 +65,7 @@ type FormValues = z.infer<typeof FormSchema>;
 export default function JoinForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  
+
   const [companySizeOptions, setCompanySizeOptions] = useState(
     defaultCompanySizeOptions,
   );
@@ -155,10 +155,10 @@ export default function JoinForm() {
       {!submitted ? (
         <motion.div
           variants={TextVariants}
-          viewport={{ once: true, amount: 0.5 }}
-          whileInView="visible"
+         
+          animate="visible"
           initial="hidden"
-          className="md:flex justify-center pt-24 pb-16 px-8"
+          className="md:flex justify-center pt-20 pb-16 px-8"
         >
           <div>
             <div className="text-5xl font-medium w-2/3">
@@ -183,15 +183,15 @@ export default function JoinForm() {
             </div>
           </div>
 
-          <NeobruCard className="p-8">
+          <NeobruCard className="p-6">
             {loading && <Loader />}
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="space-y-4 w-80 md:w-96"
+              className="space-y-4  w-full md:w-96 "
             >
               <div>
-                <label className="text-sm">Fullname </label>
-                <Input {...register("full_name")}  placeholder="John Doe"/>
+                <label className="text-sm">Fullname</label>
+                <Input {...register("full_name")} placeholder="John Doe" />
                 {errors.full_name && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.full_name.message}
@@ -200,8 +200,11 @@ export default function JoinForm() {
               </div>
 
               <div>
-                <label className="text-sm">Working email </label>
-                <Input {...register("email")} placeholder="johndoe@example.com" />
+                <label className="text-sm">Working email</label>
+                <Input
+                  {...register("email")}
+                  placeholder="johndoe@example.com"
+                />
                 {errors.email && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.email.message}
@@ -210,24 +213,24 @@ export default function JoinForm() {
               </div>
 
               <div>
-                <label className="text-sm">
-                  Current/Last School Attended 
-                </label>
-                <Input {...register("school")} placeholder="EVSU"/>
+                <label className="text-sm">Current/Last School Attended</label>
+                <Input {...register("school")} placeholder="EVSU" />
                 {errors.school && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.school.message}
                   </p>
                 )}
               </div>
-              {/* Role / Position */}
+
+              {/* ROLE */}
               <div className="w-full">
-                <label className="text-sm">Role / Position </label>
+                <label className="text-sm">Role / Position</label>
                 {errors.position && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.position.message}
                   </p>
                 )}
+
                 <Tags className="max-w-full">
                   <TagsTrigger>
                     {companySizeTags.map((tag) => (
@@ -244,17 +247,19 @@ export default function JoinForm() {
                       </TagsValue>
                     ))}
                   </TagsTrigger>
+
                   <TagsContent>
                     <TagsInput
                       placeholder="Type or select..."
                       value={companySizeInput}
                       onValueChange={setCompanySizeInput}
                     />
+
                     <TagsList>
                       <TagsEmpty>
                         <button
                           type="button"
-                          className="mx-auto flex cursor-pointer items-center gap-2"
+                          className="mx-auto flex items-center gap-2"
                           onClick={() =>
                             handleCreateTag(companySizeInput, "position")
                           }
@@ -262,6 +267,7 @@ export default function JoinForm() {
                           <PlusIcon size={14} /> Create: {companySizeInput}
                         </button>
                       </TagsEmpty>
+
                       <TagsGroup>
                         {companySizeOptions.map((tag) => (
                           <TagsItem
@@ -288,14 +294,15 @@ export default function JoinForm() {
                 </Tags>
               </div>
 
-              {/* How did you find us */}
+              {/* REFERRER */}
               <div className="w-full">
-                <label className="text-sm">How did you find us? </label>
+                <label className="text-sm">How did you find us?</label>
                 {errors.refferer && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.refferer.message}
                   </p>
                 )}
+
                 <Tags className="max-w-full">
                   <TagsTrigger>
                     {helpTags.map((tag) => (
@@ -312,22 +319,25 @@ export default function JoinForm() {
                       </TagsValue>
                     ))}
                   </TagsTrigger>
+
                   <TagsContent>
                     <TagsInput
                       placeholder="Type or select..."
                       value={helpInput}
                       onValueChange={setHelpInput}
                     />
+
                     <TagsList>
                       <TagsEmpty>
                         <button
                           type="button"
-                          className="mx-auto flex cursor-pointer items-center gap-2"
+                          className="mx-auto flex items-center gap-2"
                           onClick={() => handleCreateTag(helpInput, "refferer")}
                         >
                           <PlusIcon size={14} /> Create: {helpInput}
                         </button>
                       </TagsEmpty>
+
                       <TagsGroup>
                         {helpOptions.map((tag) => (
                           <TagsItem
@@ -353,8 +363,14 @@ export default function JoinForm() {
               </div>
 
               <div>
-                <label className="text-sm">Tell us your motivation on joining.</label>
-                <Textarea style={{ height: "80px" }} {...register("reason")} placeholder="to gain experience and ..." />
+                <label className="text-sm">
+                  Tell us your motivation on joining.
+                </label>
+                <Textarea
+                  className="min-h-[80px]"
+                  {...register("reason")}
+                  placeholder="to gain experience and ..."
+                />
                 {errors.reason && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.reason.message}
@@ -362,25 +378,23 @@ export default function JoinForm() {
                 )}
               </div>
 
-              <div className="flex gap-4 items-center">
-                <p className="text-xs text-foreground/60">
-                  By submitting this form you agree to our{" "}
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="#"
-                    className="text-foreground underline decoration-border/70 underline-offset-4 transition-colors hover:text-primary"
-                  >
-                    privacy policy
-                  </a>
-                  .
-                </p>
-              </div>
+              <p className="text-xs text-foreground/60">
+                By submitting this form you agree to our{" "}
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-4 hover:text-primary"
+                >
+                  privacy policy
+                </a>
+                .
+              </p>
 
               <Button
                 type="submit"
                 disabled={loading}
-                className="text-sm font-light w-full"
+                className="w-full text-sm font-light"
               >
                 Submit
               </Button>
