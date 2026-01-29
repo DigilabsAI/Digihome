@@ -1,5 +1,5 @@
 "use client"
-import { ProjectsBlock } from '@/components/blocks/projects-block-shadcnui'
+import { ProjectsBlock } from '@/components/blocks/projects-block'
 import { cardVariants } from '@/components/blocks/projectSection'
 import { projects} from "@/public/constants"
 import { motion } from 'framer-motion'

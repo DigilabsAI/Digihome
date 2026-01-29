@@ -25,7 +25,7 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
   return (
     <VercelCard
       className={cn(
-        "relative max-w-xs w-full overflow-hidden border border-black/[0.4] bg-card backdrop-blur-xl transition-shadow duration-500"
+        "relative max-w-xs w-full overflow-hidden border border-secondary-foreground bg-card backdrop-blur-xl transition-shadow duration-500"
       )}
     >
       <div className="relative z-10 px-6">

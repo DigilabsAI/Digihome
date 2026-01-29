@@ -31,7 +31,7 @@ export function ProjectsBlock({ project }: ProjectsBlockProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="mx-auto h-full max-w-lg overflow-hidden rounded-none border-border bg-card transition-all duration-300 hover:border-primary/50 group">
+      <Card className="mx-auto h-full max-w-lg overflow-hidden rounded-none border-secondary-foreground bg-card transition-all duration-300 hover:border-primary/50 group">
         <div className="relative aspect-video overflow-hidden">
           <motion.img
             src={project.image}

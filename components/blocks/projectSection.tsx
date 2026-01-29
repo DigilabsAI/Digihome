@@ -1,10 +1,10 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ProjectsBlock } from "./projects-block-shadcnui";
+import { ProjectsBlock } from "./projects-block";
 import { NeoButton } from "../ui/neoButton";
 import { motion, Variants } from "framer-motion";
-import type { Project } from "./projects-block-shadcnui"; // adjust path
+import type { Project } from "./projects-block"; // adjust path
 
 export const TextVariants: Variants = {
   hidden: { opacity: 0, y: 20, scale: 0.8 },

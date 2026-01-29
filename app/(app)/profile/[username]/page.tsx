@@ -3,9 +3,11 @@ import { createClient } from "@/lib/supabase/server";
 import TeamMemberCard, {
   TeamMember,
 } from "@/components/blocks/team-member-card";
-import { ProjectsBlock } from "@/components/blocks/projects-block-shadcnui";
+import { ProjectsBlock } from "@/components/blocks/projects-block";
 import { projects } from "@/public/constants";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import StatsBlock from "@/components/stats-block";
+import ProfilePageSkeleton from "@/components/skeletons/profilePageSkeleton";
 
 interface ProfilePageProps {
   params: Promise<{ username: string }>;
@@ -14,7 +16,7 @@ interface ProfilePageProps {
 export default function ProfilePage({ params }: ProfilePageProps) {
   return (
     <div>
-      <Suspense fallback={<div>Loading profile...</div>}>
+      <Suspense fallback={<ProfilePageSkeleton />}>
         {params.then(({ username }) => (
           <ProfileContent username={username} />
         ))}
@@ -65,23 +67,27 @@ async function ProfileContent({ username }: { username: string }) {
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center">
-      <div className="flex flex-col lg:flex-row w-full gap-6 max-w-7xl ">
-        {/* Left: Team card */}
-        <div className=" w-full lg:w-[320px]">
-          <TeamMemberCard member={member} />
+    <div className="w-full min-h-screen">
+      <div className="mx-auto max-w-4xl px-4 py-8 flex flex-col gap-6">
+        {/* Top section: Team + Stats */}
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Team card */}
+          <div className="lg:w-[300px] w-full shrink-0">
+            <TeamMemberCard member={member} />
+          </div>
+
+          {/* Stats cards */}
+          <div className="flex flex-1 gap-6">
+            <StatsBlock />
+          </div>
         </div>
 
-        {/* Right: Scrollable Projects */}
-        <ScrollArea className="flex-1 max-h-screen w-full pr-4">
-          <div className="flex flex-col gap-6 items-center">
-            {projects.map((project, index) => (
-              <div key={project.title + index} className="w-full">
-                <ProjectsBlock project={project} />
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
+        {/* Bottom section: Projects */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {projects.map((project, index) => (
+            <ProjectsBlock key={project.title + index} project={project} />
+          ))}
+        </div>
       </div>
     </div>
   );
