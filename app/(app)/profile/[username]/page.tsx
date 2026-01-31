@@ -6,7 +6,7 @@ import TeamMemberCard, {
 import { ProjectsBlock } from "@/components/blocks/projects-block";
 import { projects } from "@/public/constants";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import StatsBlock from "@/components/stats-block";
+import StatsBlock from "@/components/blocks/stats-block";
 import ProfilePageSkeleton from "@/components/skeletons/profilePageSkeleton";
 
 interface ProfilePageProps {

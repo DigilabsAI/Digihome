@@ -10,6 +10,13 @@ export const NAV_ITEMS = [
     { name: "Contact", href: "/contact" },
 ];
 
+export const APP_NAV_ITEMS = [
+    { name: "Dashboard", href: "/dashboard" },
+    { name: "Projects", href: "/about" },
+    { name: "Resources", href: "/resources" },
+    { name: "Members", href: "/members" },
+];
+
 export const HEADER_BRAND = {
     name: "Digilabs",
     subtitle: "Apes together strong",

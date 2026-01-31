@@ -9,10 +9,11 @@ const PUBLIC_PREFIXES = [
   "/projects",
   "/join",
   "/profile",
+  "/dashboard",
 ];
 
 const ROLE_ALLOWLIST: Record<string, string[]> = {
-  "non-member": ["/join","/dashboard"],
+  "non-member": ["/join", "/dashboard"],
   member: ["/dashboard", "/projects", "/profile", "/settings", "/join"],
   admin: ["/"],
 };
@@ -47,26 +48,28 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
+  const { data: claims } = await supabase.auth.getClaims();
+
+  if (!claims) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  const { data } = await supabase
-    .from("users")
-    .select("role, is_setup_done")
-    .eq("id", user.id)
-    .single();
+  const role = claims.claims?.user_role ?? "non-member";
+  const setupDone = claims.claims?.is_setup_done ?? false;
 
-  const role = data?.role ?? "non-member";
-  const setupDone = data?.is_setup_done ?? false;
+
+  // hard guard: only members can access /profile/update
+  if (pathname.startsWith("/profile/update") && role === "non-member") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
 
   // onboarding guard (loop-safe)
-  if (role === "member" && !setupDone && !pathname.startsWith("/profile")) {
+  if (role !== "non-member" && !setupDone && !pathname.startsWith("/profile")) {
     return NextResponse.redirect(new URL("/profile/update", request.url));
   }
 
-   if (role === "non-member" && !setupDone && !pathname.startsWith("/join")) {
+  if (role === "non-member" && !setupDone && !pathname.startsWith("/join")) {
     return NextResponse.redirect(new URL("/join", request.url));
   }
 

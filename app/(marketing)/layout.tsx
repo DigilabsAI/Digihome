@@ -1,6 +1,6 @@
 
 
-import Header2 from "@/components/blocks/header-2";
+import Header2 from "@/components/blocks/header";
 
 export default function RootLayout({
   children,

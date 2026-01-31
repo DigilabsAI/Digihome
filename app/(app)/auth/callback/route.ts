@@ -23,6 +23,7 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${origin}/auth/auth-code-error`)
     }
 
+
     // Determine redirect
     const forwardedHost = request.headers.get('x-forwarded-host')
     const isLocal = process.env.NODE_ENV === 'development'
@@ -30,8 +31,8 @@ export async function GET(request: Request) {
     const redirectUrl = isLocal
       ? `${origin}${next}`
       : forwardedHost
-      ? `https://${forwardedHost}${next}`
-      : `${origin}${next}`
+        ? `https://${forwardedHost}${next}`
+        : `${origin}${next}`
 
     return NextResponse.redirect(redirectUrl)
 

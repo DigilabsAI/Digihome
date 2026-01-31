@@ -4,12 +4,9 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, easeInOut } from "framer-motion";
 import { Menu, X, Zap } from "lucide-react";
 import Link from "next/link";
-import { APP_NAV_ITEMS, HEADER_BRAND } from "@/public/constants"; // adjust path
-import { LogoutButton } from "./logout-button";
-import { ThemeSwitcher } from "./theme-switcher";
-import AvatarDropdown from "./avatarDropdown";
+import { NAV_ITEMS, HEADER_BRAND } from "@/public/constants"; // adjust path
 
-export default function AppHeader() {
+export default function Header2() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -94,7 +91,7 @@ export default function AppHeader() {
             </motion.div>
 
             <nav className="hidden items-center space-x-1 lg:flex">
-              {APP_NAV_ITEMS.map((item) => (
+              {NAV_ITEMS.map((item) => (
                 <motion.div
                   key={item.name}
                   variants={itemVariants}
@@ -131,14 +128,24 @@ export default function AppHeader() {
               className="hidden items-center space-x-3 lg:flex"
               variants={itemVariants}
             >
-              <ThemeSwitcher />
-
+              <Link
+                prefetch={false}
+                href="/join"
+                className="text-foreground/80 hover:text-foreground px-4 py-2 text-sm font-medium transition-colors duration-200"
+              >
+                Join Us
+              </Link>
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <AvatarDropdown />
-                {/* <LogoutButton /> */}
+                <Link
+                  prefetch={false}
+                  href="/contact"
+                  className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center space-x-2 rounded-lg px-5 py-2.5 text-sm font-medium shadow-sm transition-all duration-200"
+                >
+                  <span>Get Started</span>
+                </Link>
               </motion.div>
             </motion.div>
 
@@ -177,7 +184,7 @@ export default function AppHeader() {
             >
               <div className="space-y-6 p-6">
                 <div className="space-y-1">
-                  {APP_NAV_ITEMS.map((item) => (
+                  {NAV_ITEMS.map((item) => (
                     <motion.div key={item.name} variants={mobileItemVariants}>
                       <Link
                         prefetch={false}
@@ -196,13 +203,20 @@ export default function AppHeader() {
                 >
                   <Link
                     prefetch={false}
-                    href="/login"
+                    href="/join"
                     className="text-foreground hover:bg-muted block w-full rounded-lg py-3 text-center font-medium transition-colors duration-200"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Join Us
                   </Link>
-                  <LogoutButton />
+                  <Link
+                    prefetch={false}
+                    href="/contact"
+                    className="bg-foreground text-background hover:bg-foreground/90 block w-full rounded-lg py-3 text-center font-medium transition-all duration-200"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Get Started
+                  </Link>
                 </motion.div>
               </div>
             </motion.div>
