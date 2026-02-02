@@ -124,7 +124,6 @@ export default function Team4({
         <AnimatePresence mode="wait">
           <motion.div
             whileInView="visible"
-            // viewport={{ once: true, amount: 0.3 }}
             key={activeDepartment}
             variants={containerVariants}
             initial="hidden"

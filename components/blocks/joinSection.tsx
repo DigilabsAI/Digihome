@@ -1,12 +1,11 @@
-import { getCurrentUser, hasJoinRequest } from "@/lib/actions/userAction";
+import {  hasJoinRequest } from "@/lib/actions/userAction";
 import JoinForm from "./join-form";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function JoinSection() {
   const hasRequested = await hasJoinRequest();
-  const { role } = await getCurrentUser();
-
+ 
   return (
     <div>
       {hasRequested ? (

@@ -12,8 +12,8 @@ export const NAV_ITEMS = [
 
 export const APP_NAV_ITEMS = [
     { name: "Dashboard", href: "/dashboard" },
-    { name: "Projects", href: "/about" },
-    { name: "Resources", href: "/resources" },
+    { name: "Projects", href: "/digilabs_projects" },
+    { name: "Resources", href: "/resources"  },
     { name: "Members", href: "/members" },
 ];
 

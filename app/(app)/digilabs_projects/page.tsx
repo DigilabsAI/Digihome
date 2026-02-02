@@ -1,17 +1,6 @@
-import { redirect } from "next/navigation";
-
-import { createClient } from "@/lib/supabase/server";
 import { InfoIcon } from "lucide-react";
-import { Suspense } from "react";
 
-async function UserDetails() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getClaims();
-
-  return JSON.stringify(data?.claims, null, 2);
-}
-
-export default async function ProtectedPage() {
+export default function DigilabsProjectsPage() {
   return (
     <div className="flex-1 w-full flex flex-col gap-12 mt-20">
       <div className="w-full">

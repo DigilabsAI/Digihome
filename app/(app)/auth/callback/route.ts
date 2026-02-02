@@ -9,35 +9,28 @@ export async function GET(request: Request) {
   let next = searchParams.get('protected') ?? '/dashboard'
   if (!next.startsWith('/')) next = '/dashboard'
 
-  if (!code) {
-    console.warn('[OAuth Callback] No code in URL')
-    return NextResponse.redirect(`${origin}/auth/auth-code-error`)
-  }
+ const redirectError = (msg: string) =>
+  NextResponse.redirect(`${origin}/auth/error?error=${encodeURIComponent(msg)}`);
 
-  try {
-    const supabase = await createClient()
+if (!code) return redirectError("No code in URL");
 
-    const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
-    if (exchangeError) {
-      console.error('[OAuth Callback] exchangeCodeForSession error:', exchangeError.message)
-      return NextResponse.redirect(`${origin}/auth/auth-code-error`)
-    }
+try {
+  const supabase = await createClient();
+  const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
 
+  if (exchangeError) return redirectError(exchangeError.message);
 
-    // Determine redirect
-    const forwardedHost = request.headers.get('x-forwarded-host')
-    const isLocal = process.env.NODE_ENV === 'development'
+  // Normal redirect after success
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const isLocal = process.env.NODE_ENV === "development";
+  const redirectUrl = isLocal
+    ? `${origin}${next}`
+    : forwardedHost
+      ? `https://${forwardedHost}${next}`
+      : `${origin}${next}`;
 
-    const redirectUrl = isLocal
-      ? `${origin}${next}`
-      : forwardedHost
-        ? `https://${forwardedHost}${next}`
-        : `${origin}${next}`
-
-    return NextResponse.redirect(redirectUrl)
-
-  } catch (err) {
-    console.error('[OAuth Callback] Unexpected error:', err)
-    return NextResponse.redirect(`${origin}/auth/auth-code-error`)
-  }
+  return NextResponse.redirect(redirectUrl);
+} catch (err) {
+  return redirectError((err as Error).message || "Unexpected error");
+}
 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
+import { getUserFromJWT } from "../actions/userAction";
 
 const PUBLIC_PREFIXES = [
   "/auth",
@@ -9,12 +9,13 @@ const PUBLIC_PREFIXES = [
   "/projects",
   "/join",
   "/profile",
-  "/dashboard",
+ ,
 ];
 
 const ROLE_ALLOWLIST: Record<string, string[]> = {
   "non-member": ["/join", "/dashboard"],
-  member: ["/dashboard", "/projects", "/profile", "/settings", "/join"],
+  member: ["/dashboard", "/projects", "/profile", "/settings", "/join", "/digilabs_projects",
+    "/digilabs_projects", "/members", "/resources",],
   admin: ["/"],
 };
 
@@ -37,25 +38,15 @@ export async function updateSession(request: NextRequest) {
 
   if (isPublic(pathname)) return response;
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-    {
-      cookies: {
-        getAll: () => request.cookies.getAll(),
-        setAll: () => { },
-      },
-    }
-  );
+ 
+  const user = await getUserFromJWT();
 
-  const { data: claims } = await supabase.auth.getClaims();
-
-  if (!claims) {
+  if (!user) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  const role = claims.claims?.user_role ?? "non-member";
-  const setupDone = claims.claims?.is_setup_done ?? false;
+  const role = user?.role ?? "non-member";
+  const setupDone = user?.is_setup_done ?? false;
 
 
   // hard guard: only members can access /profile/update

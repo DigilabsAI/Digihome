@@ -1,18 +1,24 @@
 "use client";
-
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, easeInOut } from "framer-motion";
 import { Menu, X, Zap } from "lucide-react";
 import Link from "next/link";
 import { APP_NAV_ITEMS, HEADER_BRAND } from "@/public/constants"; // adjust path
-import { LogoutButton } from "./logout-button";
 import { ThemeSwitcher } from "./theme-switcher";
 import AvatarDropdown from "./avatarDropdown";
+import { useUser } from "@/lib/providers/userProvider";
+import Image from "next/image";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { logout } from "./logout-button";
 
 export default function AppHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const router = useRouter();
+  const { user, setUser } = useUser();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -49,6 +55,10 @@ export default function AppHeader() {
   const mobileItemVariants = {
     closed: { opacity: 0, x: 20 },
     open: { opacity: 1, x: 0 },
+  };
+
+  const handleManualLogout = () => {
+    logout(setUser, router);
   };
 
   return (
@@ -138,22 +148,24 @@ export default function AppHeader() {
                 whileTap={{ scale: 0.98 }}
               >
                 <AvatarDropdown />
-                {/* <LogoutButton /> */}
               </motion.div>
             </motion.div>
 
-            <motion.button
-              className="text-foreground hover:bg-muted rounded-lg p-2 transition-colors duration-200 lg:hidden"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              variants={itemVariants}
-              whileTap={{ scale: 0.95 }}
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </motion.button>
+            <div className="flex items-center lg:hidden">
+              <ThemeSwitcher />
+              <motion.button
+                className="text-foreground hover:bg-muted rounded-lg p-2 transition-colors duration-200 lg:hidden"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                variants={itemVariants}
+                whileTap={{ scale: 0.95 }}
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </motion.button>
+            </div>
           </div>
         </div>
       </motion.header>
@@ -168,6 +180,7 @@ export default function AppHeader() {
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
             />
+
             <motion.div
               className="border-border bg-background fixed top-16 right-4 z-50 w-80 overflow-hidden rounded-2xl border shadow-2xl lg:hidden"
               variants={mobileMenuVariants}
@@ -182,7 +195,7 @@ export default function AppHeader() {
                       <Link
                         prefetch={false}
                         href={item.href}
-                        className="text-foreground hover:bg-muted block rounded-lg px-4 py-3 font-medium transition-colors duration-200"
+                        className="text-foreground hover:bg-muted block rounded-lg px-4 py-2 font-medium transition-colors duration-200"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         {item.name}
@@ -191,18 +204,76 @@ export default function AppHeader() {
                   ))}
                 </div>
                 <motion.div
+                  className="border-border  border-t pt-2"
+                  variants={mobileItemVariants}
+                >
+                  {user?.role === "admin" && (
+                    <Link
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      href="/admin"
+                      className="text-foreground hover:bg-muted block rounded-lg px-4 py-2 font-medium transition-colors duration-200"
+                    >
+                      Admin
+                    </Link>
+                  )}
+                  <Link
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    href={"/profile/" + user?.username}
+                    className="text-foreground hover:bg-muted block rounded-lg px-4 py-2 font-medium transition-colors duration-200"
+                  >
+                    Profile
+                  </Link>
+                  <Button
+                    variant="outline"
+                    className="shadow-none text-foreground hover:bg-red-600/10 block rounded-lg px-4 py-2 font-medium transition-colors duration-200 border-none w-full text-left"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleManualLogout;
+                    }}
+                  >
+                    Sign Out
+                  </Button>
+                </motion.div>
+                <motion.div
                   className="border-border space-y-3 border-t pt-6"
                   variants={mobileItemVariants}
                 >
-                  <Link
-                    prefetch={false}
-                    href="/login"
-                    className="text-foreground hover:bg-muted block w-full rounded-lg py-3 text-center font-medium transition-colors duration-200"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Join Us
-                  </Link>
-                  <LogoutButton />
+                  {!user && (
+                    <Link
+                      prefetch={false}
+                      href="/auth/login"
+                      className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center space-x-2 rounded-lg px-5 py-2.5 text-sm font-medium shadow-sm transition-all duration-200 w-full justify-center"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <span>Log in</span>
+                    </Link>
+                  )}
+
+                  {user && (
+                    <div className="flex justify-center gap-2 items-center">
+                      <Avatar className=" bg-transparent w-12 h-12">
+                        <div className="h-full w-full  rounded-full bg-white">
+                          <Image
+                            src={user.avatar_url || "/default-avatar.png"}
+                            alt={user.name + "'s Avatar" || "User Avatar"}
+                            width={48}
+                            height={48}
+                          />
+                          <AvatarFallback>
+                            {user.name?.charAt(0).toUpperCase() || "User"}
+                          </AvatarFallback>
+                        </div>
+                      </Avatar>
+                      <div className="flex flex-col items-center justify-center py-1">
+                        <p className="px-4 text-lg text-center font-medium">
+                          {user.name}
+                        </p>
+                        <p className="px-4 text-sm text-muted-foreground text-center">
+                          {user.title}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </motion.div>
               </div>
             </motion.div>

@@ -127,16 +127,12 @@ const updateRequestStatus = async ({
 }) => {
   const supabase = createClient();
 
-  console.log("[1] Updating join request:", { id, status });
-
   const { data, error } = await supabase
     .from("organization_join_requests")
     .update({ status })
     .eq("id", id)
     .select("user_id")
     .single();
-
-  console.log("[2] Join request result:", { data, error });
 
   if (error) throw error;
   if (!data?.user_id) throw new Error("No user_id returned");
@@ -148,8 +144,9 @@ const updateRequestStatus = async ({
     .update({ role: newRole })
     .eq("id", data.user_id)
     .select();
-  if (userError) throw userError;
-
+    
+    if (userError) console.error("Error updating user role:", userError);
+    if (userError) throw userError;
   toast.success(`Request ${status}`);
 };
 

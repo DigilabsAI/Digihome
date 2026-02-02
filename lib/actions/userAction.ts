@@ -2,11 +2,11 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import type { User } from "@/lib/types/user";
+import { cache } from "react";
 
 export async function getCurrentUser() {
   const supabase = await createClient();
-
-
 
   const { data: { user }, error: userError } = await supabase.auth.getUser();
 
@@ -49,3 +49,10 @@ export async function hasJoinRequest(): Promise<boolean> {
 
   return Boolean(data);
 }
+
+
+export const getUserFromJWT = cache(async (): Promise<User | null> => {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
+  return (data?.claims?.profile_data as User) ?? null;
+});

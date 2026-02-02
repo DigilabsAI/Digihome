@@ -25,14 +25,14 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
   return (
     <VercelCard
       className={cn(
-        "relative max-w-xs w-full overflow-hidden border border-secondary-foreground bg-card backdrop-blur-xl transition-shadow duration-500"
+        "relative max-w-xs w-full overflow-hidden border border-secondary-foreground dark:border-secondary-foreground bg-card backdrop-blur-xl transition-shadow duration-500"
       )}
     >
       <div className="relative z-10 px-6">
         {/* Avatar */}
         <div className="mb-4 flex justify-center">
           <div className="relative w-full transition-transform duration-300 hover:scale-105">
-            <NeobruCard className="relative h-44 w-full overflow-hidden p-1 md:p-0 bg-card/80">
+            <NeobruCard className="relative h-44 w-full overflow-hidden p-1 md:p-0 border shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#000] bg-white">
               <div className="relative h-full w-full">
                 <Image
                   src={member.image}

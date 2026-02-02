@@ -8,7 +8,7 @@ interface ProfileSkeletonProps {
 }
 export default function ProfileSkeleton({ className }: ProfileSkeletonProps) {
   return (
-    <div className="mx-auto max-w-3xl p-4 sm:p-6 lg:p-8">
+    <div className="mx-auto max-w-3xl p-4 sm:p-6 lg:p-8 mt-20">
       <Card className={cn("w-full shadow-xs", className)}>
         <CardHeader>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">

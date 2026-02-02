@@ -155,7 +155,6 @@ export default function JoinForm() {
       {!submitted ? (
         <motion.div
           variants={TextVariants}
-         
           animate="visible"
           initial="hidden"
           className="md:flex justify-center pt-20 pb-16 px-8"

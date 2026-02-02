@@ -5,7 +5,6 @@ import TeamMemberCard, {
 } from "@/components/blocks/team-member-card";
 import { ProjectsBlock } from "@/components/blocks/projects-block";
 import { projects } from "@/public/constants";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import StatsBlock from "@/components/blocks/stats-block";
 import ProfilePageSkeleton from "@/components/skeletons/profilePageSkeleton";
 
@@ -68,12 +67,14 @@ async function ProfileContent({ username }: { username: string }) {
 
   return (
     <div className="w-full min-h-screen">
-      <div className="mx-auto max-w-4xl px-4 py-8 flex flex-col gap-6">
+      <div className="mx-auto max-w-4xl px-4 py-8 flex flex-col gap-6 mt-20">
         {/* Top section: Team + Stats */}
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Team card */}
           <div className="lg:w-[300px] w-full shrink-0">
-            <TeamMemberCard member={member} />
+            <div className="flex h-full justify-center">
+              <TeamMemberCard member={member} />
+            </div>
           </div>
 
           {/* Stats cards */}

@@ -21,7 +21,7 @@ function VercelCard({
     <div
       className={cn(
         "group/canvas-card relative flex flex-col items-center justify-center w-full h-full min-h-[200px]",
-        bordered && "border border-black/[0.3] dark:border-white/[0.2] ",
+        bordered && "border border-black/[0.3] dark:border-white/[0.4] ",
         className
       )}
     >
