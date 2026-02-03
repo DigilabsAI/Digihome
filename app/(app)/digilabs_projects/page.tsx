@@ -1,3 +1,4 @@
+import { ComingSoon4 } from "@/components/beste/comingsoon4";
 import { InfoIcon } from "lucide-react";
 
 export default function DigilabsProjectsPage() {
@@ -8,6 +9,7 @@ export default function DigilabsProjectsPage() {
           <InfoIcon size="16" strokeWidth={2} />
           Site Under Development. Some features may not work as expected.
         </div>
+        <ComingSoon4 />
       </div>
     </div>
   );

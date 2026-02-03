@@ -64,6 +64,10 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(new URL("/join", request.url));
   }
 
+  if (role === "non-member" && !setupDone && pathname.startsWith("/join")) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
   if (!canAccess(pathname, role)) {
     return NextResponse.redirect(new URL("/", request.url));
   }

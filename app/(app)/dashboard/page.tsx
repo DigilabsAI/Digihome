@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { InfoIcon } from "lucide-react";
 import { Suspense } from "react";
+import { ComingSoon4, comingsoonDemo } from "@/components/beste/comingsoon4";
 
 async function UserDetails() {
   const supabase = await createClient();
@@ -19,6 +20,7 @@ export default async function ProtectedPage() {
           <InfoIcon size="16" strokeWidth={2} />
           Site Under Development. Some features may not work as expected.
         </div>
+        <ComingSoon4 />
       </div>
     </div>
   );

@@ -24,7 +24,8 @@ export default async function JoinSection() {
             </div>
           </div>
           <Link
-            href={"/dashboard"}
+           prefetch={false}
+            href={"/profile/update"}
             className="bg-foreground text-background hover:bg-foreground/90 block w-full lg:w-24 text-base rounded-lg py-2 px-4 text-center font-medium transition-all duration-200"
           >
             Refresh

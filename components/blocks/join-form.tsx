@@ -29,6 +29,7 @@ import NeobruCard from "../ui/neobruCard";
 import { submitJoinForm } from "@/lib/actions/joinFormAction";
 import Loader from "../ui/loader";
 import { TextVariants } from "./projectSection";
+import Link from "next/link";
 
 const defaultCompanySizeOptions = [
   "Frontend Developer",
@@ -420,6 +421,13 @@ export default function JoinForm() {
               Your application has been successfully submitted. Digilabs will
               reach out to you soon with further information.
             </div>
+             <Link
+             prefetch={false}
+            href={"/profile/update"}
+            className="bg-foreground text-background hover:bg-foreground/90 block w-full lg:w-24 text-base rounded-lg py-2 px-4 text-center font-medium transition-all duration-200"
+          >
+            Refresh
+          </Link>
           </motion.div>
         </div>
       )}
