@@ -41,6 +41,9 @@ export async function saveProfile(data: {
         .eq("id", user.id);
 
 
+    await supabase.auth.refreshSession();
+
+
 }
 
 

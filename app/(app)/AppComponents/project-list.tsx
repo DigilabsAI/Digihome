@@ -233,14 +233,14 @@ function ProjectCard({
       {project.thumbnail ? (
         <Image
           alt={project.name}
-          className="h-32 w-full rounded-lg object-cover"
-          height={128}
+          className="h-40 w-full rounded-lg object-cover"
+          height={158}
           src={project.thumbnail}
           width={256}
         />
       ) : (
         <div
-          className="flex h-32 items-center justify-center rounded-lg font-semibold text-2xl text-white"
+          className="flex h-40 items-center justify-center rounded-lg font-semibold text-2xl text-white"
           style={{
             backgroundColor: project.color || "hsl(var(--primary))",
           }}
@@ -276,7 +276,7 @@ function ProjectCard({
               </Avatar>
             ))}
             {project.members.length > 4 && (
-              <div className="flex size-6 items-center justify-center rounded-full border-2 border-background bg-muted text-muted-foreground text-xs">
+              <div className="flex size-6 items-center z-50 justify-center rounded-full border-2 border-background bg-muted text-muted-foreground text-xs">
                 +{project.members.length - 4}
               </div>
             )}
