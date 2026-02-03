@@ -56,8 +56,8 @@ export default function DigilabsProjectsPage() {
               ],
               taskCount: 24,
               completedTaskCount: 16,
-              createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000),
-              updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+              createdAt: new Date("2024-05-01T00:00:00.000Z"),
+              updatedAt:  new Date("2024-05-01T00:00:00.000Z"),
             },
             {
               id: "project-2",
@@ -89,8 +89,8 @@ export default function DigilabsProjectsPage() {
               ],
               taskCount: 18,
               completedTaskCount: 8,
-              createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-              updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+               createdAt: new Date("2024-05-01T00:00:00.000Z"),
+              updatedAt:  new Date("2024-05-01T00:00:00.000Z"),
             },
             {
               id: "project-3",
@@ -122,8 +122,8 @@ export default function DigilabsProjectsPage() {
               ],
               taskCount: 14,
               completedTaskCount: 14,
-              createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
-              updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+              createdAt: new Date("2024-05-01T00:00:00.000Z"),
+              updatedAt:  new Date("2024-05-01T00:00:00.000Z"),
             },
           ]}
         />
