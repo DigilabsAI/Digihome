@@ -207,32 +207,43 @@ export default function AppHeader() {
                   className="border-border  border-t pt-2"
                   variants={mobileItemVariants}
                 >
-                  {user?.role === "admin" && (
-                    <Link
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      href="/admin"
-                      className="text-foreground hover:bg-muted block rounded-lg px-4 py-2 font-medium transition-colors duration-200"
-                    >
-                      Admin
-                    </Link>
+                  {user && (
+                    <div className="space-y-2">
+                      {/* Admin Link */}
+                      {user.role === "admin" && (
+                        <Link
+                          href="/admin"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="text-foreground hover:bg-muted block rounded-lg px-4 py-2 font-medium transition-colors duration-200"
+                        >
+                          Admin
+                        </Link>
+                      )}
+
+                      {/* Profile Link */}
+                      {user.role !== "non-member" && (
+                        <Link
+                          href={`/profile/${user.username}`}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="text-foreground hover:bg-muted block rounded-lg px-4 py-2 font-medium transition-colors duration-200"
+                        >
+                          Profile
+                        </Link>
+                      )}
+
+                      {/* Sign Out Button */}
+                      <Button
+                        variant="outline"
+                        className="shadow-none text-foreground hover:bg-red-600/10 block rounded-lg px-4 py-2 font-medium transition-colors duration-200 border-none w-full text-left"
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          handleManualLogout();
+                        }}
+                      >
+                        Sign Out
+                      </Button>
+                    </div>
                   )}
-                  <Link
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    href={"/profile/" + user?.username}
-                    className="text-foreground hover:bg-muted block rounded-lg px-4 py-2 font-medium transition-colors duration-200"
-                  >
-                    Profile
-                  </Link>
-                  <Button
-                    variant="outline"
-                    className="shadow-none text-foreground hover:bg-red-600/10 block rounded-lg px-4 py-2 font-medium transition-colors duration-200 border-none w-full text-left"
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      handleManualLogout;
-                    }}
-                  >
-                    Sign Out
-                  </Button>
                 </motion.div>
                 <motion.div
                   className="border-border space-y-3 border-t pt-6"
@@ -249,27 +260,27 @@ export default function AppHeader() {
                     </Link>
                   )}
 
-                  {user && (
+                  {user?.role !== "non-member" && (
                     <div className="flex justify-center gap-2 items-center">
                       <Avatar className=" bg-transparent w-12 h-12">
                         <div className="h-full w-full  rounded-full bg-white">
                           <Image
-                            src={user.avatar_url || "/default-avatar.png"}
-                            alt={user.name + "'s Avatar" || "User Avatar"}
+                            src={user?.avatar_url || "/default-avatar.png"}
+                            alt={user?.name + "'s Avatar" || "User Avatar"}
                             width={48}
                             height={48}
                           />
                           <AvatarFallback>
-                            {user.name?.charAt(0).toUpperCase() || "User"}
+                            {user?.name?.charAt(0).toUpperCase() || "User"}
                           </AvatarFallback>
                         </div>
                       </Avatar>
                       <div className="flex flex-col items-center justify-center py-1">
                         <p className="px-4 text-lg text-center font-medium">
-                          {user.name}
+                          {user?.name}
                         </p>
                         <p className="px-4 text-sm text-muted-foreground text-center">
-                          {user.title}
+                          {user?.title}
                         </p>
                       </div>
                     </div>
