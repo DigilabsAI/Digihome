@@ -32,7 +32,7 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
         {/* Avatar */}
         <div className="mb-4 flex justify-center">
           <div className="relative w-full transition-transform duration-300 hover:scale-105">
-            <NeobruCard className="relative h-36 w-full overflow-hidden p-1 md:p-0 border shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#000] bg-white">
+            <NeobruCard className="relative h-40 md:h-36 w-full overflow-hidden p-1 md:p-0 border shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#000] bg-white">
               <div className="relative h-full w-full">
                 <Image
                   src={member.image}

@@ -1,9 +1,8 @@
 "use client";
 
-import { Users, Star, ArrowRight, Play, Award, Target } from "lucide-react";
+import { Users, Star, ArrowRight, Award } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { VercelCard } from "../ui/vercel-card";
 import { easeOut, motion } from "framer-motion";
 import type { Variants } from "framer-motion";
@@ -104,7 +103,7 @@ const Hero3 = ({
                     duration: 0.1,
                   }}
                   key={index}
-                  className="size-12 border-2 transform transition-transform duration-200 hover:-translate-y-2 hover:scale-110"
+                  className="size-12 border-2 border-secondary-foreground transform transition-transform duration-200 hover:-translate-y-2 hover:scale-110"
                 >
                   <AvatarImage src={avatar.src} alt={avatar.alt} />
                 </MotionAvatar>
@@ -115,7 +114,7 @@ const Hero3 = ({
                 {[...Array(5)].map((_, index) => (
                   <Star
                     key={index}
-                    className="size-5 fill-yellow-400 text-yellow-400"
+                    className="size-5 fill-yellow-400 text-yellow-400 "
                   />
                 ))}
                 <span className="mr-1 font-semibold">
@@ -136,11 +135,11 @@ const Hero3 = ({
         <VercelCard glowEffect className=" overflow-hidden p-2">
           <div className="flex relative ">
             <MotionNeobruCard
-              variants={cardVariants(2)}
+              variants={cardVariants(10,1)}
               initial="initial"
               animate="animate"
               whileHover="hover"
-              className="absolute top-0 right-0 md:right-12 transform-gpu "
+              className="absolute top-24 -right-2 md:top-36 md:right-0 transform-gpu "
             >
               <div className="flex items-start gap-0.5 md:gap-1.5 pr-2 md:pr-6 text-foreground">
                 <Award   className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 text-primary" aria-hidden="true" />
@@ -153,12 +152,12 @@ const Hero3 = ({
               </p>
                <p className="text-[0.5rem] sm:text-xs text-foreground/50">Delivered</p>
             </MotionNeobruCard>
-            <MotionNeobruCard
-              variants={cardVariants(4, -5)}
+             <MotionNeobruCard
+              variants={cardVariants(9, -5)}
               initial="initial"
               animate="animate"
               whileHover="hover"
-              className="absolute bottom-4 left-5 md:left-20
+              className="absolute bottom-36 md:bottom-80 -left-2 md:left-5
             transform-gpu 
            "
             >
@@ -177,12 +176,12 @@ const Hero3 = ({
               <p className="text-[0.5rem] sm:text-xs text-foreground/50">Trusted Partners</p>
             </MotionNeobruCard>
             <Image
-              src="/MessyDoodle.svg"
+              src="/boy.png"
               alt="placeholder hero"
               
-              width={1200}
+              width={1000}
               height={800}
-              className="max-h-[600px] w-full rounded-md object-cover lg:max-h-[800px] filter dark:invert"
+              className="max-h-[600px] w-full rounded-md object-center lg:max-h-[800px] filter dark:invert"
             />
           </div>
         </VercelCard>
