@@ -25,7 +25,7 @@ const data = [
 export default function StatsBlock() {
   return (
     <div className="flex items-center justify-center w-full ">
-      <dl className="grid grid-cols-1 gap-6 w-full">
+      <dl className="grid grid-cols-1 gap-4 w-full">
         {data.map((item) => (
           <Card
             key={item.name}

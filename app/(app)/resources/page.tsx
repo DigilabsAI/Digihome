@@ -1,4 +1,4 @@
-import { ComingSoon4 } from "@/components/beste/comingsoon4";
+import { ComingSoon4 } from "@/components/ui/comingsoon4";
 import { InfoIcon } from "lucide-react";
 
 export default function ResourcesPage() {

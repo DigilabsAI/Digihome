@@ -67,24 +67,24 @@ async function ProfileContent({ username }: { username: string }) {
 
   return (
     <div className="w-full min-h-screen">
-      <div className="mx-auto max-w-4xl px-4 py-8 flex flex-col gap-6 mt-20">
+      <div className="mx-auto max-w-4xl px-4 py-8 flex flex-col gap-4 mt-20">
         {/* Top section: Team + Stats */}
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-4">
           {/* Team card */}
-          <div className="lg:w-[300px] w-full shrink-0">
+          <div className="lg:w-[280px] w-full shrink-0">
             <div className="flex h-full justify-center">
               <TeamMemberCard member={member} />
             </div>
           </div>
 
           {/* Stats cards */}
-          <div className="flex flex-1 gap-6">
+          <div className="flex flex-1 gap-4">
             <StatsBlock />
           </div>
         </div>
 
         {/* Bottom section: Projects */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {projects.map((project, index) => (
             <ProjectsBlock key={project.title + index} project={project} />
           ))}

@@ -1,5 +1,13 @@
 "use client";
 
+import {
+  Banner,
+  BannerAction,
+  BannerClose,
+  BannerIcon,
+  BannerTitle,
+} from "@/components/ui/banner";
+import { CircleAlert } from "lucide-react";
 import { Camera, CheckIcon, Loader2, PlusIcon, Save, X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -103,7 +111,6 @@ const defaultSocialPlatforms = [
 
 const DEFAULT_AVATAR_URL =
   "https://phxxpovjltygyxmctbfy.supabase.co/storage/v1/object/public/avatars/Default/DefaultAvatar.png";
-
 
 // Zod schema
 const profileSchema = z.object({
@@ -406,363 +413,377 @@ export default function SettingsProfile({
 
   // ------------------ RENDER ------------------
   return (
-    <Card className={cn("w-full shadow-xs", className)}>
-      <CardHeader>
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <CardTitle className="wrap-break-word">Profile Settings</CardTitle>
-            <CardDescription className="wrap-break-word">
-              Manage your profile information and avatar
-            </CardDescription>
-          </div>
-          <div className="flex shrink-0 gap-2">
-            <Button
-              className="w-full sm:w-auto"
-              disabled={isSaving}
-              onClick={handleSave}
-              type="button"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="size-4 animate-spin" />
-                  <span className="whitespace-nowrap">Saving…</span>
-                </>
-              ) : (
-                <>
-                  <Save className="size-4" />
-                  <span className="whitespace-nowrap">Save Changes</span>
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-col gap-6">
-          {errors._general && (
-            <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3">
-              <p className="text-destructive text-sm">{errors._general}</p>
+    <div className="w-full">
+      <Banner inset className="mb-6" >
+        <BannerIcon icon={CircleAlert} />
+        <BannerTitle>Navbar not updating? Please refresh the page.</BannerTitle>
+        <BannerClose />
+      </Banner>
+      <Card className={cn("w-full shadow-xs", className)}>
+        <CardHeader>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
+              <CardTitle className="wrap-break-word">
+                Profile Settings
+              </CardTitle>
+              <CardDescription className="wrap-break-word">
+                Manage your profile information and avatar
+              </CardDescription>
             </div>
-          )}
-
-          {/* Avatar Upload */}
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center">
-              <div
-                className={cn(
-                  "relative flex size-24 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed transition-colors",
-                  isUploadingAvatar
-                    ? "border-primary bg-primary/5"
-                    : "border-muted bg-muted/30 hover:border-primary/50",
-                )}
-                onClick={handleAvatarClick}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
+            <div className="flex shrink-0 gap-2">
+              <Button
+                className="w-full sm:w-auto"
+                disabled={isSaving}
+                onClick={handleSave}
+                type="button"
               >
-                {avatarPreview ? (
+                {isSaving ? (
                   <>
-                    <Image
-                      src={avatarPreview}
-                      alt="Profile avatar"
-                      fill
-                      sizes="96px"
-                      className="object-cover"
-                      loading="lazy"
-                    />
-
-                    {isUploadingAvatar && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-background/80">
-                        <Loader2 className="size-6 animate-spin text-primary" />
-                      </div>
-                    )}
+                    <Loader2 className="size-4 animate-spin" />
+                    <span className="whitespace-nowrap">Saving…</span>
                   </>
                 ) : (
-                  <Camera className="size-8 text-muted-foreground" />
+                  <>
+                    <Save className="size-4" />
+                    <span className="whitespace-nowrap">Save Changes</span>
+                  </>
                 )}
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-6">
+            {errors._general && (
+              <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3">
+                <p className="text-destructive text-sm">{errors._general}</p>
               </div>
-              <div className="flex flex-1 flex-col gap-2">
-                <div className="flex flex-col gap-2 sm:flex-row">
-                  <Button
-                    onClick={handleAvatarClick}
-                    type="button"
-                    variant="outline"
-                  >
-                    <Camera className="size-4" />
-                    {avatarPreview ? "Change Photo" : "Upload Photo"}
-                  </Button>
-                  {avatarPreview && (
+            )}
+
+            {/* Avatar Upload */}
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center">
+                <div
+                  className={cn(
+                    "relative flex size-24 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed transition-colors",
+                    isUploadingAvatar
+                      ? "border-primary bg-primary/5"
+                      : "border-muted bg-muted/30 hover:border-primary/50",
+                  )}
+                  onClick={handleAvatarClick}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                >
+                  {avatarPreview ? (
+                    <>
+                      <Image
+                        src={avatarPreview}
+                        alt="Profile avatar"
+                        fill
+                        sizes="96px"
+                        className="object-cover"
+                        loading="lazy"
+                      />
+
+                      {isUploadingAvatar && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-background/80">
+                          <Loader2 className="size-6 animate-spin text-primary" />
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <Camera className="size-8 text-muted-foreground" />
+                  )}
+                </div>
+                <div className="flex flex-1 flex-col gap-2">
+                  <div className="flex flex-col gap-2 sm:flex-row">
                     <Button
-                      onClick={handleAvatarRemoveClick}
+                      onClick={handleAvatarClick}
                       type="button"
                       variant="outline"
                     >
-                      <X className="size-4" />
-                      Remove
+                      <Camera className="size-4" />
+                      {avatarPreview ? "Change Photo" : "Upload Photo"}
                     </Button>
+                    {avatarPreview && (
+                      <Button
+                        onClick={handleAvatarRemoveClick}
+                        type="button"
+                        variant="outline"
+                      >
+                        <X className="size-4" />
+                        Remove
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-muted-foreground text-xs">
+                    Drag and drop an image here, or click to browse. Max size:
+                    5MB
+                  </p>
+                  <a
+                    href="https://faces.notion.com/"
+                    target="_blank"
+                    className="text-muted-foreground text-xs underline"
+                  >
+                    Create your avatar here https://faces.notion.com.
+                  </a>
+                  {errors.avatar && (
+                    <p className="text-destructive text-xs">{errors.avatar}</p>
                   )}
                 </div>
-                <p className="text-muted-foreground text-xs">
-                  Drag and drop an image here, or click to browse. Max size: 5MB
-                </p>
-                <a
-                  href="https://faces.notion.com/"
-                  target="_blank"
-                  className="text-muted-foreground text-xs underline"
-                >
-                  Create your avatar here https://faces.notion.com.
-                </a>
-                {errors.avatar && (
-                  <p className="text-destructive text-xs">{errors.avatar}</p>
-                )}
-              </div>
-              <input
-                accept="image/*"
-                className="hidden"
-                onChange={handleFileInputChange}
-                ref={fileInputRef}
-                type="file"
-              />
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Basic Information */}
-          <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {/* Full Name */}
-              <Field>
-                <FieldLabel htmlFor="name">Full Name</FieldLabel>
-                <FieldContent>
-                  <InputGroup>
-                    <InputGroupInput
-                      id="name"
-                      placeholder="John Doe"
-                      value={formData.name}
-                      onChange={(e) => {
-                        const name = e.target.value;
-                        setFormData((prev) => ({
-                          ...prev,
-                          name,
-                          username: usernameEdited
-                            ? prev.username
-                            : generateUsername(name),
-                        }));
-                      }}
-                    />
-                  </InputGroup>
-                  {errors.name && <FieldError>{errors.name}</FieldError>}
-                </FieldContent>
-              </Field>
-
-              {/* Username */}
-              <Field>
-                <FieldLabel htmlFor="username">Username</FieldLabel>
-                <FieldContent>
-                  <InputGroup>
-                    <InputGroupInput
-                      id="username"
-                      placeholder="john_doe"
-                      value={formData.username ?? ""}
-                      onChange={(e) => {
-                        setUsernameEdited(true); // user manually typed → stop auto-fill
-                        setFormData((prev) => ({
-                          ...prev,
-                          username: generateUsername(e.target.value),
-                        }));
-                      }}
-                    />
-                  </InputGroup>
-                  <FieldDescription>Used in your profile URL</FieldDescription>
-                  {errors.username && (
-                    <FieldError>{errors.username}</FieldError>
-                  )}
-                </FieldContent>
-              </Field>
-            </div>
-
-            <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <FieldContent>
-                <div className="flex flex-col gap-2">
-                  <InputGroup>
-                    <InputGroupInput
-                      id="email"
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          email: e.target.value,
-                        }))
-                      }
-                      placeholder="your.email@example.com"
-                      type="email"
-                      value={formData.email}
-                    />
-                  </InputGroup>
-                </div>
-                {errors.email && <FieldError>{errors.email}</FieldError>}
-              </FieldContent>
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="bio">Bio</FieldLabel>
-              <FieldContent>
-                <Textarea
-                  id="bio"
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, bio: e.target.value }))
-                  }
-                  placeholder="I love cats and coffee."
-                  rows={4}
-                  value={formData.bio}
+                <input
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileInputChange}
+                  ref={fileInputRef}
+                  type="file"
                 />
-                <FieldDescription>
-                  A brief description about yourself (1 sentence or phrase)
-                </FieldDescription>
-                {errors.bio && <FieldError>{errors.bio}</FieldError>}
-              </FieldContent>
-            </Field>
-
-            <div className="flex flex-col gap-4 md:flex-row md:gap-6">
-              {/* Roles */}
-              <div className="flex-1">
-                <Field>
-                  <FieldLabel>Roles</FieldLabel>
-                  <FieldContent>
-                    <Tags className="w-full">
-                      <TagsTrigger>
-                        {selectedRoles.map((role) => (
-                          <TagsValue
-                            key={role}
-                            onRemove={() => handleRoleRemove(role)}
-                          >
-                            {roleTags.find((t) => t.id === role)?.label}
-                          </TagsValue>
-                        ))}
-                      </TagsTrigger>
-
-                      <TagsContent>
-                        <TagsInput
-                          onValueChange={setNewRole}
-                          placeholder="Search or create role..."
-                        />
-                        <TagsList>
-                          <TagsEmpty>
-                            <button
-                              type="button"
-                              className="mx-auto flex items-center gap-2"
-                              onClick={handleCreateRole}
-                            >
-                              <PlusIcon size={14} />
-                              Create role: {newRole}
-                            </button>
-                          </TagsEmpty>
-
-                          <TagsGroup>
-                            {roleTags.map((tag) => (
-                              <TagsItem
-                                key={tag.id}
-                                value={tag.id}
-                                onSelect={handleRoleSelect}
-                              >
-                                {tag.label}
-                                {selectedRoles.includes(tag.id) && (
-                                  <CheckIcon size={14} />
-                                )}
-                              </TagsItem>
-                            ))}
-                          </TagsGroup>
-                        </TagsList>
-                      </TagsContent>
-                    </Tags>
-                  </FieldContent>
-                  {errors.roles && <FieldError>{errors.roles}</FieldError>}
-                </Field>
-              </div>
-
-              {/* Department */}
-              <div className="flex-1">
-                <Field>
-                  <FieldLabel>Department</FieldLabel>
-                  <FieldContent>
-                    <Tags className="w-full">
-                      <TagsTrigger>
-                        {formData.department && (
-                          <TagsValue
-                            onRemove={() =>
-                              setFormData((prev) => ({
-                                ...prev,
-                                department: undefined,
-                              }))
-                            }
-                          >
-                            {
-                              departmentOptions.find(
-                                (d) => d.id === formData.department,
-                              )?.label
-                            }
-                          </TagsValue>
-                        )}
-                      </TagsTrigger>
-
-                      <TagsContent>
-                        <TagsList>
-                          <TagsGroup>
-                            {departmentOptions.map((dept) => (
-                              <TagsItem
-                                key={dept.id}
-                                value={dept.id}
-                                onSelect={() => handleDepartmentSelect(dept.id)}
-                              >
-                                {dept.label}
-                                {formData.department === dept.id && (
-                                  <CheckIcon size={14} />
-                                )}
-                              </TagsItem>
-                            ))}
-                          </TagsGroup>
-                        </TagsList>
-                      </TagsContent>
-                    </Tags>
-                  </FieldContent>
-                  {errors.department && (
-                    <FieldError>{errors.department}</FieldError>
-                  )}
-                </Field>
               </div>
             </div>
-          </div>
 
-          <Separator />
+            <Separator />
 
-          {/* Social Links */}
-          <div className="flex flex-col gap-4">
-            <FieldLabel>Social Links</FieldLabel>
-            <div className="flex flex-col gap-3">
-              {defaultSocialPlatforms.map((platform) => (
-                <Field key={platform.id}>
-                  <FieldLabel htmlFor={`social-${platform.id}`}>
-                    {platform.label}
-                  </FieldLabel>
+            {/* Basic Information */}
+            <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {/* Full Name */}
+                <Field>
+                  <FieldLabel htmlFor="name">Full Name</FieldLabel>
                   <FieldContent>
                     <InputGroup>
                       <InputGroupInput
-                        id={`social-${platform.id}`}
-                        onChange={(e) =>
-                          updateSocialLink(platform.id, e.target.value)
-                        }
-                        placeholder={platform.placeholder}
-                        type="url"
-                        value={getSocialLink(platform.id)}
+                        id="name"
+                        placeholder="John Doe"
+                        value={formData.name}
+                        onChange={(e) => {
+                          const name = e.target.value;
+                          setFormData((prev) => ({
+                            ...prev,
+                            name,
+                            username: usernameEdited
+                              ? prev.username
+                              : generateUsername(name),
+                          }));
+                        }}
                       />
                     </InputGroup>
+                    {errors.name && <FieldError>{errors.name}</FieldError>}
                   </FieldContent>
                 </Field>
-              ))}
+
+                {/* Username */}
+                <Field>
+                  <FieldLabel htmlFor="username">Username</FieldLabel>
+                  <FieldContent>
+                    <InputGroup>
+                      <InputGroupInput
+                        id="username"
+                        placeholder="john_doe"
+                        value={formData.username ?? ""}
+                        onChange={(e) => {
+                          setUsernameEdited(true); // user manually typed → stop auto-fill
+                          setFormData((prev) => ({
+                            ...prev,
+                            username: generateUsername(e.target.value),
+                          }));
+                        }}
+                      />
+                    </InputGroup>
+                    <FieldDescription>
+                      Used in your profile URL
+                    </FieldDescription>
+                    {errors.username && (
+                      <FieldError>{errors.username}</FieldError>
+                    )}
+                  </FieldContent>
+                </Field>
+              </div>
+
+              <Field>
+                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldContent>
+                  <div className="flex flex-col gap-2">
+                    <InputGroup>
+                      <InputGroupInput
+                        id="email"
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            email: e.target.value,
+                          }))
+                        }
+                        placeholder="your.email@example.com"
+                        type="email"
+                        value={formData.email}
+                      />
+                    </InputGroup>
+                  </div>
+                  {errors.email && <FieldError>{errors.email}</FieldError>}
+                </FieldContent>
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="bio">Bio</FieldLabel>
+                <FieldContent>
+                  <Textarea
+                    id="bio"
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, bio: e.target.value }))
+                    }
+                    placeholder="I love cats and coffee."
+                    rows={4}
+                    value={formData.bio}
+                  />
+                  <FieldDescription>
+                    A brief description about yourself (1 sentence or phrase)
+                  </FieldDescription>
+                  {errors.bio && <FieldError>{errors.bio}</FieldError>}
+                </FieldContent>
+              </Field>
+
+              <div className="flex flex-col gap-4 md:flex-row md:gap-6">
+                {/* Roles */}
+                <div className="flex-1">
+                  <Field>
+                    <FieldLabel>Roles</FieldLabel>
+                    <FieldContent>
+                      <Tags className="w-full">
+                        <TagsTrigger>
+                          {selectedRoles.map((role) => (
+                            <TagsValue
+                              key={role}
+                              onRemove={() => handleRoleRemove(role)}
+                            >
+                              {roleTags.find((t) => t.id === role)?.label}
+                            </TagsValue>
+                          ))}
+                        </TagsTrigger>
+
+                        <TagsContent>
+                          <TagsInput
+                            onValueChange={setNewRole}
+                            placeholder="Search or create role..."
+                          />
+                          <TagsList>
+                            <TagsEmpty>
+                              <button
+                                type="button"
+                                className="mx-auto flex items-center gap-2"
+                                onClick={handleCreateRole}
+                              >
+                                <PlusIcon size={14} />
+                                Create role: {newRole}
+                              </button>
+                            </TagsEmpty>
+
+                            <TagsGroup>
+                              {roleTags.map((tag) => (
+                                <TagsItem
+                                  key={tag.id}
+                                  value={tag.id}
+                                  onSelect={handleRoleSelect}
+                                >
+                                  {tag.label}
+                                  {selectedRoles.includes(tag.id) && (
+                                    <CheckIcon size={14} />
+                                  )}
+                                </TagsItem>
+                              ))}
+                            </TagsGroup>
+                          </TagsList>
+                        </TagsContent>
+                      </Tags>
+                    </FieldContent>
+                    {errors.roles && <FieldError>{errors.roles}</FieldError>}
+                  </Field>
+                </div>
+
+                {/* Department */}
+                <div className="flex-1">
+                  <Field>
+                    <FieldLabel>Department</FieldLabel>
+                    <FieldContent>
+                      <Tags className="w-full">
+                        <TagsTrigger>
+                          {formData.department && (
+                            <TagsValue
+                              onRemove={() =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  department: undefined,
+                                }))
+                              }
+                            >
+                              {
+                                departmentOptions.find(
+                                  (d) => d.id === formData.department,
+                                )?.label
+                              }
+                            </TagsValue>
+                          )}
+                        </TagsTrigger>
+
+                        <TagsContent>
+                          <TagsList>
+                            <TagsGroup>
+                              {departmentOptions.map((dept) => (
+                                <TagsItem
+                                  key={dept.id}
+                                  value={dept.id}
+                                  onSelect={() =>
+                                    handleDepartmentSelect(dept.id)
+                                  }
+                                >
+                                  {dept.label}
+                                  {formData.department === dept.id && (
+                                    <CheckIcon size={14} />
+                                  )}
+                                </TagsItem>
+                              ))}
+                            </TagsGroup>
+                          </TagsList>
+                        </TagsContent>
+                      </Tags>
+                    </FieldContent>
+                    {errors.department && (
+                      <FieldError>{errors.department}</FieldError>
+                    )}
+                  </Field>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Social Links */}
+            <div className="flex flex-col gap-4">
+              <FieldLabel>Social Links</FieldLabel>
+              <div className="flex flex-col gap-3">
+                {defaultSocialPlatforms.map((platform) => (
+                  <Field key={platform.id}>
+                    <FieldLabel htmlFor={`social-${platform.id}`}>
+                      {platform.label}
+                    </FieldLabel>
+                    <FieldContent>
+                      <InputGroup>
+                        <InputGroupInput
+                          id={`social-${platform.id}`}
+                          onChange={(e) =>
+                            updateSocialLink(platform.id, e.target.value)
+                          }
+                          placeholder={platform.placeholder}
+                          type="url"
+                          value={getSocialLink(platform.id)}
+                        />
+                      </InputGroup>
+                    </FieldContent>
+                  </Field>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
