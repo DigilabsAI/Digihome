@@ -45,11 +45,11 @@ export default function CTA2({
           </div>
         </div>
         <div className="relative z-10">
-          <h1 className="mb-3 text-3xl font-extrabold text-secondary-foreground sm:text-4xl md:text-5xl">
+          <h1 className="text-center md:text-left mb-3 text-3xl font-extrabold text-secondary-foreground sm:text-4xl md:text-5xl">
             {title}
           </h1>
 
-          <p className="mb-6 max-w-md text-base font-medium text-secondary-foreground sm:text-lg">
+          <p className="text-center  md:text-left mb-6 max-w-md text-base font-medium text-secondary-foreground sm:text-lg">
             {subtitle}
           </p>
 

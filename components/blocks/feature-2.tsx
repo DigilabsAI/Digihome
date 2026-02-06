@@ -121,7 +121,7 @@ export default function FeatureSteps({ workflow }: WorkflowProps) {
             transition={{ duration: 0.6, ease: "easeInOut" }}
             viewport={{ once: true, amount: 0.5 }}
             className={cn(
-              "border-primary relative order-1 h-[200px] overflow-hidden border-2 md:order-1 md:h-[300px] lg:h-[400px]"
+              "border-primary md:max-w-md relative order-1 h-[200px] overflow-hidden border-2 md:order-1 md:h-[300px] lg:h-[400px]"
             )}
           >
             <AnimatePresence mode="wait">

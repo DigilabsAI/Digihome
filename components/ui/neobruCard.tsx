@@ -15,7 +15,7 @@ const NeobruCard = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "max-w-md bg-background border-4 border-foreground shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#000] p-2 md:p-4 z-20",
+        " bg-background border-4 border-foreground shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#000] p-2 md:p-4 z-20",
         className
       )}
       {...props}

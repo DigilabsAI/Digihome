@@ -6,6 +6,8 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import CurrentYear from "./current-year";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import { HEADER_BRAND } from "@/public/constants";
 
 export type FooterLink = {
   title: string;
@@ -24,23 +26,30 @@ interface FooterProps {
 const Footer = ({ FooterData }: FooterProps) => {
   return (
     <footer>
-      <motion.div 
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1 }}
-      className="py-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-8 gap-y-10 px-6 xl:px-0">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="py-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-8 gap-y-10 px-6 xl:px-0"
+      >
         <div className="col-span-full xl:col-span-2">
-          {/* Logo */}
-          <svg
-            id="logo-7"
-            width="124"
-            height="32"
-            viewBox="0 0 124 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* ...SVG paths remain unchanged */}
-          </svg>
+          <div className="flex items-center gap-2  ">
+            <Image
+              src={HEADER_BRAND.logo}
+              alt="Digilabs Logo"
+              width={50}
+              height={50}
+              className=" rounded-full object-cover"
+            />
+            <div className="flex flex-col">
+              <span className="text-foreground text-lg font-bold">
+                {HEADER_BRAND.name}
+              </span>
+              <span className="text-muted-foreground -mt-1 text-xs">
+                {HEADER_BRAND.subtitle}
+              </span>
+            </div>
+          </div>
 
           <p className="mt-4 text-muted-foreground">
             Design amazing digital experiences that create more happy in the
@@ -75,7 +84,7 @@ const Footer = ({ FooterData }: FooterProps) => {
               placeholder="Enter your email"
               className="grow max-w-64"
             />
-            <Button>Subscribe</Button>
+            <Button disabled>Subscribe</Button>
           </form>
         </div>
       </motion.div>

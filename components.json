@@ -26,6 +26,7 @@
     "@uitripled": "https://ui.tripled.work/r/{name}.json",
     "@hextaui": "https://hextaui.com/r/{name}.json",
     "@kibo-ui": "https://www.kibo-ui.com/r/{name}.json",
-    "@blocks": "https://blocks.so/r/{name}.json"
+    "@blocks": "https://blocks.so/r/{name}.json",
+    "@shadcn-space": "https://shadcnspace.com/r/{name}.json"
   }
 }

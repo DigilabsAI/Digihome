@@ -20,6 +20,7 @@ export const APP_NAV_ITEMS = [
 export const HEADER_BRAND = {
     name: "Digilabs",
     subtitle: "Apes together strong",
+    logo: "/logo.jpg",
 };
 
 

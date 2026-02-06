@@ -48,13 +48,13 @@ export default function TestimonialsGrid({
   if (!mounted) return null;
 
   return (
-    <section className={cn("bg-muted pt-8 pb-36 mb-36 md:pb-24 xl:mb-10")}>
+    <section className={cn("bg-muted pt-8 pb-36 mb-36 md:pb-24 xl:mb-20")}>
       <div className="container mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="grid grid-cols-1 gap-4 md:gap-12 lg:grid-cols-2"
+         className="grid grid-cols-1 gap-4 md:gap-4 place-items-center"
         >
           {/* Left */}
           <motion.div
@@ -62,9 +62,9 @@ export default function TestimonialsGrid({
             viewport={{ once: true, amount: 0.5 }}
             whileInView="visible"
             initial="hidden"
-            className="flex flex-col justify-center"
+            className="flex flex-col justify-center text-center"
           >
-            <h2 className="text-foreground mb-4 text-4xl font-semibold">
+            <h2 className="text-foreground  mb-4 text-4xl font-semibold">
               Voices from our Partners.
             </h2>
             <p className="text-foreground/70 text-lg">
