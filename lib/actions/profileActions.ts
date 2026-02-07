@@ -1,50 +1,64 @@
 "use server";
 
 import { SocialLink } from "@/app/(app)/AppComponents/settings-profile";
-import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "./userAction";
+import { title } from "process";
+
+const ROLE_DEPARTMENT_MAP: Record<string, string[]> = {
+  frontend: ["development"],
+  backend: ["development"],
+  fullstack: ["development"],
+  mobile: ["development"],
+  devops: ["development"],
+  "project-manager": ["management"],
+  uiux: ["design"],
+};
+
 
 export async function saveProfile(data: {
-    name: string;
-    email: string;
-    bio: string;
-    socialLinks?: SocialLink[];
-    roles?: string[];
-    department?: string;
-    username: string;
+  name: string;
+  email: string;
+  title: string;
+  bio: string;
+  socialLinks?: SocialLink[];
+  roles?: string[];
+  username: string;
 }) {
-    const { supabase, user } = await getCurrentUser();
+  const { supabase, user } = await getCurrentUser();
 
-    // 1. Upsert profile
-    const { error: profileError } = await supabase
-        .from("profiles")
-        .upsert(
-            {
-                user_id: user.id,
-                username: data.username,
-                name: data.name,
-                email: data.email,
-                bio: data.bio,
-                roles: data.roles ?? [],
-                department: data.department ?? null,
-                social_links: data.socialLinks ?? [],
-                updated_at: new Date().toISOString(),
-            },
-            { onConflict: "user_id" }
-        );
+  const roles = data.roles ?? [];
+  const departments = resolveDepartments(roles);
 
+  const { error: profileError } = await supabase
+    .from("profiles")
+    .upsert(
+      {
+        user_id: user.id,
+        username: data.username,
+        title: data.title,
+        name: data.name,
+        email: data.email,
+        bio: data.bio,
+        roles,
+        department: departments.length ? departments.join(",") : null,
+        social_links: data.socialLinks ?? [],
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id" }
+    );
 
-    // 2. Mark setup as done
-    const { error: userError } = await supabase
-        .from("users")
-        .update({ is_setup_done: true })
-        .eq("id", user.id);
+  if (profileError) throw profileError;
 
+  const { error: userError } = await supabase
+    .from("users")
+    .update({ is_setup_done: true })
+    .eq("id", user.id);
 
-    await supabase.auth.refreshSession();
+  if (userError) throw userError;
 
-
+  await supabase.auth.refreshSession();
 }
+
 
 
 export async function uploadAvatar(file: File) {
@@ -110,4 +124,17 @@ export async function getProfile() {
 
 
     return data;
+}
+
+
+function resolveDepartments(roles: string[] = []): string[] {
+  const departments = new Set<string>();
+
+  roles.forEach((role) => {
+    ROLE_DEPARTMENT_MAP[role]?.forEach((dept) =>
+      departments.add(dept)
+    );
+  });
+
+  return Array.from(departments);
 }

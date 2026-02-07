@@ -59,13 +59,13 @@ export interface SocialLink {
 
 export interface ProfileData {
   name: string;
+  title: string;
   username: string;
   email: string;
   bio: string;
   avatar_url?: string;
   socialLinks?: SocialLink[];
   roles?: string[];
-  department?: string;
 }
 
 export interface SettingsProfileProps {
@@ -79,11 +79,13 @@ export interface SettingsProfileProps {
 }
 
 const departmentOptions = [
-  { id: "management", label: "Management" },
-  { id: "development", label: "Development" },
-  { id: "design", label: "Design" },
-  { id: "pentesting", label: "Pentesting" },
-  { id: "qa", label: "Quality Assurance" },
+  { id: "Frontend Engineer", label: "Frontend Engineer" },
+  { id: "Backend Architect", label: "Backend Architect" },
+  { id: "UI/UX Designer", label: "UI/UX Designer" },
+  { id: "Cloud Engineer", label: "Cloud Engineer" },
+  { id: "QA Engineer", label: "QA Engineer" },
+  { id: "Bug Slayer", label: "Bug Slayer" },
+  { id: "Lightmode User", label: "Lightmode User" },
 ];
 
 const defaultSocialPlatforms = [
@@ -145,7 +147,10 @@ const profileSchema = z.object({
     .regex(
       /^[a-z0-9_]+$/,
       "Only lowercase letters, numbers, and underscores are allowed",
-    ),
+    )
+    .refine((val) => val !== "update", {
+      message: 'Username cannot be "update"',
+    }),
 });
 
 const DEFAULT_PROFILE: ProfileData = {
@@ -153,10 +158,10 @@ const DEFAULT_PROFILE: ProfileData = {
   username: "",
   email: "",
   bio: "",
+  title: "",
   avatar_url: "",
   socialLinks: [],
   roles: [],
-  department: undefined,
 };
 
 const generateUsername = (name: string) =>
@@ -185,7 +190,7 @@ export default function SettingsProfile({
   });
 
   const handleDepartmentSelect = (value: string) => {
-    setFormData((prev) => ({ ...prev, department: value }));
+    setFormData((prev) => ({ ...prev, title: value }));
   };
 
   const defaultRoleTags = [
@@ -236,20 +241,51 @@ export default function SettingsProfile({
     setNewRole("");
   };
 
-  useEffect(() => {
-    if (!profile) {
-      setFormData(DEFAULT_PROFILE);
-      setAvatarPreview(DEFAULT_AVATAR_URL);
-      return;
-    }
+  const [departmentTags, setDepartmentTags] = useState(departmentOptions);
+  const [newDepartment, setNewDepartment] = useState("");
 
-    setFormData({
-      ...DEFAULT_PROFILE,
-      ...profile,
+  const handleCreateDepartment = () => {
+    if (!newDepartment.trim()) return;
+
+    const newTag = { id: newDepartment, label: newDepartment };
+    setDepartmentTags((prev) => [...prev, newTag]);
+    setFormData((prev) => ({ ...prev, department: newTag.id }));
+    setNewDepartment("");
+  };
+
+useEffect(() => {
+  if (!profile) {
+    setFormData(DEFAULT_PROFILE);
+    setAvatarPreview(DEFAULT_AVATAR_URL);
+    return;
+  }
+
+  const mergedFormData = { ...DEFAULT_PROFILE, ...profile };
+  setFormData(mergedFormData);
+  setAvatarPreview(profile.avatar_url ?? DEFAULT_AVATAR_URL);
+
+  // Deduplicate and add department
+  if (mergedFormData.title) {
+    setDepartmentTags((prev) => {
+      if (!prev.find((d) => d.id === mergedFormData.title)) {
+        return [...prev, { id: mergedFormData.title, label: mergedFormData.title }];
+      }
+      return prev;
     });
+  }
 
-    setAvatarPreview(profile.avatar_url ?? DEFAULT_AVATAR_URL);
-  }, [profile]);
+  // Deduplicate and add roles
+  (mergedFormData.roles || []).forEach((role) => {
+    setRoleTags((prev) => {
+      if (!prev.find((r) => r.id === role)) {
+        return [...prev, { id: role, label: role }];
+      }
+      return prev;
+    });
+  });
+}, [profile]);
+
+
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const avatarFileRef = useRef<File | null>(null);
@@ -353,7 +389,7 @@ export default function SettingsProfile({
         const key = issue.path[0] as string;
         // Map Zod messages to friendly ones
         if (key === "department")
-          fieldErrors[key] = "Please select a department";
+          fieldErrors[key] = "Please select a title";
         // else if (key === "bio") fieldErrors[key] = "Please enter your bio";
         else if (key === "roles") fieldErrors[key] = "Select at least one role";
         else if (key === "website")
@@ -373,7 +409,7 @@ export default function SettingsProfile({
         bio: formData.bio || "",
         socialLinks: formData.socialLinks,
         roles: formData.roles,
-        department: formData.department,
+        title: formData.title,
       });
       toast.success("Profile saved successfully!");
     } catch (err) {
@@ -414,7 +450,7 @@ export default function SettingsProfile({
   // ------------------ RENDER ------------------
   return (
     <div className="w-full">
-      <Banner inset className="mb-6" >
+      <Banner inset className="mb-6">
         <BannerIcon icon={CircleAlert} />
         <BannerTitle>Navbar not updating? Please refresh the page.</BannerTitle>
         <BannerClose />
@@ -701,22 +737,22 @@ export default function SettingsProfile({
                 {/* Department */}
                 <div className="flex-1">
                   <Field>
-                    <FieldLabel>Department</FieldLabel>
+                    <FieldLabel>Title</FieldLabel>
                     <FieldContent>
                       <Tags className="w-full">
                         <TagsTrigger>
-                          {formData.department && (
+                          {formData.title && (
                             <TagsValue
                               onRemove={() =>
                                 setFormData((prev) => ({
                                   ...prev,
-                                  department: undefined,
+                                  title: "",
                                 }))
                               }
                             >
                               {
-                                departmentOptions.find(
-                                  (d) => d.id === formData.department,
+                                departmentTags.find(
+                                  (d) => d.id === formData.title,
                                 )?.label
                               }
                             </TagsValue>
@@ -724,18 +760,35 @@ export default function SettingsProfile({
                         </TagsTrigger>
 
                         <TagsContent>
+                          <TagsInput
+                            onValueChange={setNewDepartment}
+                            placeholder="Search or Create a title..."
+                          />
                           <TagsList>
+                            <TagsEmpty>
+                              {newDepartment.trim() && (
+                                <button
+                                  type="button"
+                                  className="mx-auto flex items-center gap-2"
+                                  onClick={handleCreateDepartment}
+                                >
+                                  <PlusIcon size={14} />
+                                  Create department: {newDepartment}
+                                </button>
+                              )}
+                            </TagsEmpty>
+
                             <TagsGroup>
-                              {departmentOptions.map((dept) => (
+                              {departmentTags.map((tag) => (
                                 <TagsItem
-                                  key={dept.id}
-                                  value={dept.id}
+                                  key={tag.id}
+                                  value={tag.id}
                                   onSelect={() =>
-                                    handleDepartmentSelect(dept.id)
+                                  {handleDepartmentSelect(tag.id)}
                                   }
                                 >
-                                  {dept.label}
-                                  {formData.department === dept.id && (
+                                  {tag.label}
+                                  {formData.title === tag.id && (
                                     <CheckIcon size={14} />
                                   )}
                                 </TagsItem>
