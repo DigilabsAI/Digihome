@@ -141,7 +141,7 @@ export default function Team4({
 
         <AnimatePresence mode="wait">
           <motion.div
-            key={activeDepartment} // <- makes it re-animate when department changes
+            key={activeDepartment} 
             layout
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

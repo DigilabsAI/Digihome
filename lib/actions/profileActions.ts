@@ -2,7 +2,6 @@
 
 import { SocialLink } from "@/app/(app)/AppComponents/settings-profile";
 import { getCurrentUser } from "./userAction";
-import { title } from "process";
 
 const ROLE_DEPARTMENT_MAP: Record<string, string[]> = {
   frontend: ["development"],
@@ -62,70 +61,94 @@ export async function saveProfile(data: {
 
 
 export async function uploadAvatar(file: File) {
-    const { supabase, user } = await getCurrentUser();
+  const { supabase, user } = await getCurrentUser();
 
-    const fileExt = file.name.split(".").pop();
-    const timestamp = Date.now(); // unique for each upload
-    const filePath = `${user.id}/avatar_${timestamp}.${fileExt}`;
+  const fileExt = file.name.split(".").pop();
+  const timestamp = Date.now(); // unique for each upload
+  const filePath = `${user.id}/avatar_${timestamp}.${fileExt}`;
 
-    const { error: uploadError } = await supabase.storage
-        .from("avatars")
-        .upload(filePath, file, {
-            upsert: true,
-            contentType: file.type,
-        });
+  const { error: uploadError } = await supabase.storage
+    .from("avatars")
+    .upload(filePath, file, {
+      upsert: true,
+      contentType: file.type,
+    });
 
-    if (uploadError) {
-        throw new Error(uploadError.message);
-    }
+  if (uploadError) {
+    throw new Error(uploadError.message);
+  }
 
-    const { data } = supabase.storage
-        .from("avatars")
-        .getPublicUrl(filePath);
+  const { data } = supabase.storage
+    .from("avatars")
+    .getPublicUrl(filePath);
 
-    const avatarUrl = data.publicUrl;
+  const avatarUrl = data.publicUrl;
 
-    const { error: updateError } = await supabase
-        .from("profiles")
-        .update({ avatar_url: avatarUrl })
-        .eq("user_id", user.id);
+  const { error: updateError } = await supabase
+    .from("profiles")
+    .update({ avatar_url: avatarUrl })
+    .eq("user_id", user.id);
 
-    if (updateError) {
-        throw new Error(updateError.message);
-    }
+  if (updateError) {
+    throw new Error(updateError.message);
+  }
 
-    return avatarUrl;
+  return avatarUrl;
 }
 
 
 export async function removeAvatar() {
+  const { supabase, user } = await getCurrentUser();
+  await supabase.storage
+    .from("avatars")
+    .remove([`${user.id}/avatar.png`, `${user.id}/avatar.jpg`]);
 
-    const { supabase, user } = await getCurrentUser();
-    await supabase.storage
-        .from("avatars")
-        .remove([`${user.id}/avatar.png`, `${user.id}/avatar.jpg`]);
-
-    await supabase
-        .from("profiles")
-        .update({ avatar_url: null })
-        .eq("user_id", user.id);
+  await supabase
+    .from("profiles")
+    .update({ avatar_url: null })
+    .eq("user_id", user.id);
 }
 
 
 export async function getProfile() {
-    const { supabase, user } = await getCurrentUser();
+  const { supabase, user } = await getCurrentUser();
 
-    const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", user.id)
-        .single();
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("user_id", user.id)
+    .single();
 
 
 
-    return data;
+  return data;
 }
 
+export async function getMembers() {
+  const { supabase, user } = await getCurrentUser();
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(`
+      id,
+      name,
+      email,
+      bio,
+      roles,
+      department,
+      avatar_url,
+      social_links,
+      title,
+      username
+    `)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
 
 function resolveDepartments(roles: string[] = []): string[] {
   const departments = new Set<string>();

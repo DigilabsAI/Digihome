@@ -87,10 +87,13 @@ export default function AppHeader() {
                 className="flex items-center space-x-3"
               >
                 <div className="relative">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 via-rose-600 to-rose-700 shadow-lg">
-                    <Zap className="h-5 w-5 text-white" />
-                  </div>
-                  <div className="absolute -top-1 -right-1 h-3 w-3 animate-pulse rounded-full bg-green-400"></div>
+                  <Image
+                    src={HEADER_BRAND.logo}
+                    alt={HEADER_BRAND.name}
+                    width={40}
+                    height={40}
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-foreground text-lg font-bold">

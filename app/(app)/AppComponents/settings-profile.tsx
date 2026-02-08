@@ -310,7 +310,6 @@ useEffect(() => {
       const avatarUrl = await uploadAvatar(file); // ← server action
       setAvatarPreview(avatarUrl);
       setFormData((prev) => ({ ...prev, avatar: avatarUrl }));
-      toast.success("Avatar uploaded successfully!");
       setErrors({});
     } catch (err) {
       setErrors({
