@@ -9,10 +9,11 @@ import { cn } from "@/lib/utils"; // assuming you have cn utility
 export type TeamMember = {
   name: string;
   bio: string;
-  role: string;
-  department?: string;
+  role: string[];
+  title: string;
+  department?: string[];
   image: string;
-  skills: string[];
+  skills?: string[];
   social: {
     twitter?: string;
     linkedin?: string;
@@ -32,7 +33,7 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
         {/* Avatar */}
         <div className="mb-4 flex justify-center">
           <div className="relative w-full transition-transform duration-300 hover:scale-105">
-            <NeobruCard className="relative h-40 md:h-36 w-full overflow-hidden p-1 md:p-0 border shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#000] bg-white">
+            <NeobruCard className="relativ lg:min-w-md h-40 md:h-36 w-full overflow-hidden p-1 md:p-0 border shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#000] bg-white">
               <div className="relative h-full w-full">
                 <Image
                   src={member.image}
@@ -53,25 +54,26 @@ function TeamMemberCard({ member }: { member: TeamMember }) {
             {member.name}
           </h3>
 
+          
           <Badge
             variant="secondary"
-            className="mb-2 text-xs uppercase tracking-wide text-muted-foreground"
+            className="mb-2 text-xs uppercase tracking-wide text-muted-foreground "
           >
-            {member.role}
+            {member.title}
           </Badge>
 
           {/* Bio */}
-          <p className="mb-4 text-sm leading-relaxed text-secondary-foreground/90">
+          <p className="mb-2 text-sm leading-relaxed text-secondary-foreground/90 min-w-32 inline-block ">
             {member.bio}
           </p>
 
           {/* Skills */}
           <div className="mb-4 flex flex-wrap justify-center gap-1.5">
-            {member.skills.map((skill) => (
+            {(Array.isArray(member.role) ? member.role : [member.role]).map((skill) => (
               <Badge
                 key={skill}
                 variant="outline"
-                className="border-border/60 bg-white/5 text-xs text-muted-foreground hover:bg-white/10"
+                className="border-border/80 bg-white/5 text-xs text-secondary-foreground/80 hover:bg-white/10"
               >
                 • {skill}
               </Badge>

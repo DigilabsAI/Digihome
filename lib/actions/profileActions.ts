@@ -3,6 +3,7 @@
 import { SocialLink } from "@/app/(app)/AppComponents/settings-profile";
 import { getCurrentUser } from "./userAction";
 
+
 const ROLE_DEPARTMENT_MAP: Record<string, string[]> = {
   frontend: ["development"],
   backend: ["development"],
@@ -147,17 +148,35 @@ export async function getMembers() {
     throw new Error(error.message);
   }
 
-  return data;
+
+  return (data || []).map((user: any) => ({
+    name: user.name,
+    bio: user.bio,
+    title: user.title,
+    role: user.roles?.map((r: string) => toTitleCase(r)) || [],
+    department: resolveDepartments(user.roles),
+    image: user.avatar_url || "",
+    skills: user.skills || [],
+    social: {
+      twitter: user.social_links?.twitter,
+      linkedin: user.social_links?.linkedin,
+      github: user.social_links?.github,
+      website: user.social_links?.website,
+    },
+  }));
 }
 
 function resolveDepartments(roles: string[] = []): string[] {
   const departments = new Set<string>();
-
   roles.forEach((role) => {
-    ROLE_DEPARTMENT_MAP[role]?.forEach((dept) =>
-      departments.add(dept)
-    );
+    ROLE_DEPARTMENT_MAP[role]?.forEach((dept) => departments.add(dept));
   });
-
   return Array.from(departments);
+}
+
+function toTitleCase(str: string) {
+  return str
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }

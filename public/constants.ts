@@ -13,7 +13,7 @@ export const NAV_ITEMS = [
 export const APP_NAV_ITEMS = [
     { name: "Dashboard", href: "/dashboard" },
     { name: "Projects", href: "/digilabs_projects" },
-    { name: "Resources", href: "/resources"  },
+    { name: "Resources", href: "/resources" },
     { name: "Members", href: "/members" },
 ];
 
@@ -112,38 +112,38 @@ export const departments: { id: Department; label: string }[] = [
 export const elegantTeamMembers: TeamMember[] = [
     {
         name: "Anthony Jumaya",
-        department: "management",
-        role: "Co-Founder",
+        department: ["management"],
+        title: "Co-Founder",
         bio: "Visionary leader with 15+ years in tech",
         image: "/avs1.png",
-        skills: ["Strategy", "Leadership"],
+        role: ["Strategy", "Leadership"],
         social: { twitter: "#", linkedin: "#", github: "#", website: "#" },
     },
     {
         name: "Michael Chen",
-        department: "management",
-        role: "CTO",
+        department: ["development"],
+        title: "Co-Founder",
         bio: "Full-stack architect and AI enthusiast",
         image: "/avs2.png",
-        skills: ["AI/ML", "Architecture"],
+        role: ["AI/ML", "Architecture"],
         social: { twitter: "#", linkedin: "#", github: "#", website: "michael@example.com" },
     },
     {
         name: "Emily Rodriguez",
-        department: "management",
-        role: "Head of Design",
+        department: ["management"],
+        title: "Co-Founder",
         bio: "Creative mind behind beautiful interfaces",
         image: "/avs3.png",
-        skills: ["UI/UX", "Branding"],
+        role: ["UI/UX", "Branding"],
         social: { twitter: "#", linkedin: "#", github: "#", website: "#" },
     },
     {
         name: "David Park",
-        department: "management",
-        role: "Lead Developer",
+        department: ["design"],
+        title: "Co-Founder",
         bio: "Code wizard and performance optimizer",
         image: "/avs4.png",
-        skills: ["React", "TypeScript"],
+        role: ["React", "TypeScript"],
         social: { twitter: "#", linkedin: "#", github: "#", website: "david@example.com" },
     },
 ];
@@ -288,25 +288,25 @@ export const footerSections = [
 //About Page
 
 export const experiences = [
-  {
-    title: "Senior Full Stack Developer",
-    company: "TechCorp Solutions",
-    period: "2023 - Present",
-    description:
-      "Led the development of enterprise-scale web applications, mentored junior developers, and implemented best practices for code quality and performance optimization.",
-  },
-  {
-    title: "Full Stack Developer",
-    company: "Digital Innovations Inc",
-    period: "2021 - 2023",
-    description:
-      "Developed and maintained multiple client projects, implemented responsive designs, and integrated third-party APIs for enhanced functionality.",
-  },
-  {
-    title: "Frontend Developer",
-    company: "WebTech Studios",
-    period: "2018 - 2021",
-    description:
-      "Created responsive and interactive user interfaces, collaborated with designers, and optimized application performance.",
-  },
+    {
+        title: "Senior Full Stack Developer",
+        company: "TechCorp Solutions",
+        period: "2023 - Present",
+        description:
+            "Led the development of enterprise-scale web applications, mentored junior developers, and implemented best practices for code quality and performance optimization.",
+    },
+    {
+        title: "Full Stack Developer",
+        company: "Digital Innovations Inc",
+        period: "2021 - 2023",
+        description:
+            "Developed and maintained multiple client projects, implemented responsive designs, and integrated third-party APIs for enhanced functionality.",
+    },
+    {
+        title: "Frontend Developer",
+        company: "WebTech Studios",
+        period: "2018 - 2021",
+        description:
+            "Created responsive and interactive user interfaces, collaborated with designers, and optimized application performance.",
+    },
 ];

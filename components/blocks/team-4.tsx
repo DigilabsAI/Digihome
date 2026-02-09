@@ -64,11 +64,10 @@ export default function Team4({
   const [activeDepartment, setActiveDepartment] =
     useState<Department>("management");
 
-  const filteredTeamMembers = teamMembers?.filter(
-    (member) =>
-      member.department?.toLowerCase() === activeDepartment ||
-      member.role?.toLowerCase().includes(activeDepartment)
-  );
+ const filteredTeamMembers = teamMembers?.filter((member) =>
+  member.department?.some((dept) => dept.toLowerCase() === activeDepartment) 
+);
+
 
   const titleParts = title?.split(/(magic)/i);
 

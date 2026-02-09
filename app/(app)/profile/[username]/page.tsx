@@ -39,13 +39,12 @@ async function ProfileContent({ username }: { username: string }) {
 
   const member: TeamMember = {
     name: profile.name,
+    title: profile.title || "",
     bio: profile.bio || "",
-    role: profile.title || "Team Member",
-    department: profile.department || undefined,
+    role: profile.roles || [],
     image:
       profile.avatar_url ||
       "https://phxxpovjltygyxmctbfy.supabase.co/storage/v1/object/public/avatars/Default/DefaultAvatar.png",
-    skills: profile.roles || [],
     social: (profile.social_links || []).reduce((acc: any, link: any) => {
       switch (link.platform) {
         case "twitter":

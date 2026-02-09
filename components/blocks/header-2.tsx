@@ -144,7 +144,7 @@ export default function AppHeader() {
               className="hidden items-center space-x-3 lg:flex"
               variants={itemVariants}
             >
-              <ThemeSwitcher />
+              {/* <ThemeSwitcher /> */}
 
               <motion.div
                 whileHover={{ scale: 1.02 }}
