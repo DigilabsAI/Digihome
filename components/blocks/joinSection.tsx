@@ -1,11 +1,19 @@
-import {  hasJoinRequest } from "@/lib/actions/userAction";
+import {  getUserFromJWT, hasJoinRequest } from "@/lib/actions/userAction";
 import JoinForm from "./join-form";
 import Image from "next/image";
-import Link from "next/link";
+import RefreshButton from "../ui/refresh-session-button";
+import { redirect } from "next/navigation";
 
 export default async function JoinSection() {
   const hasRequested = await hasJoinRequest();
  
+   const user = await getUserFromJWT();
+ 
+  if(user?.role !== "non-member"){
+    console.log("redirecting to profile update")
+    redirect("/profile/update");
+  }
+
   return (
     <div>
       {hasRequested ? (
@@ -22,14 +30,8 @@ export default async function JoinSection() {
               Your application has been successfully submitted. Digilabs will
               reach out to you soon with further information.
             </div>
+            <RefreshButton/>
           </div>
-          <Link
-           prefetch={false}
-            href={"/profile/update"}
-            className="bg-foreground text-background hover:bg-foreground/90 block w-full lg:w-24 text-base rounded-lg py-2 px-4 text-center font-medium transition-all duration-200"
-          >
-            Refresh
-          </Link>
         </div>
       ) : (
         <JoinForm />

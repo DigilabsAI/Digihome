@@ -114,16 +114,21 @@ export async function removeAvatar() {
 export async function getProfile() {
   const { supabase, user } = await getCurrentUser();
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("profiles")
     .select("*")
     .eq("user_id", user.id)
     .single();
 
-
-
-  return data;
+  if (!data) return null;
+  
+  return {
+    ...data,
+    socialLinks: data.social_links ?? [],
+  };
 }
+
+
 
 export async function getMembers() {
   const { supabase, user } = await getCurrentUser();

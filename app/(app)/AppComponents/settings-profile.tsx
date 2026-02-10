@@ -139,7 +139,7 @@ const profileSchema = z.object({
       { message: "Please enter a valid URL" },
     ),
   roles: z.array(z.string()).min(1, "Select at least one role"),
-  department: z.string().min(1, "Department is required"),
+  title: z.string().min(1, "Title is required"),
   username: z
     .string()
     .min(3, "Username must be at least 3 characters")
@@ -253,40 +253,41 @@ export default function SettingsProfile({
     setNewDepartment("");
   };
 
-useEffect(() => {
-  if (!profile) {
-    setFormData(DEFAULT_PROFILE);
-    setAvatarPreview(DEFAULT_AVATAR_URL);
-    return;
-  }
+  useEffect(() => {
+    if (!profile) {
+      setFormData(DEFAULT_PROFILE);
+      setAvatarPreview(DEFAULT_AVATAR_URL);
+      return;
+    }
 
-  const mergedFormData = { ...DEFAULT_PROFILE, ...profile };
-  setFormData(mergedFormData);
-  setAvatarPreview(profile.avatar_url ?? DEFAULT_AVATAR_URL);
+    const mergedFormData = { ...DEFAULT_PROFILE, ...profile };
+    setFormData(mergedFormData);
+    setAvatarPreview(profile.avatar_url ?? DEFAULT_AVATAR_URL);
 
-  // Deduplicate and add department
-  if (mergedFormData.title) {
-    setDepartmentTags((prev) => {
-      if (!prev.find((d) => d.id === mergedFormData.title)) {
-        return [...prev, { id: mergedFormData.title, label: mergedFormData.title }];
-      }
-      return prev;
+    // Deduplicate and add department
+    if (mergedFormData.title) {
+      setDepartmentTags((prev) => {
+        if (!prev.find((d) => d.id === mergedFormData.title)) {
+          return [
+            ...prev,
+            { id: mergedFormData.title, label: mergedFormData.title },
+          ];
+        }
+        return prev;
+      });
+    }
+
+    // Deduplicate and add roles
+    (mergedFormData.roles || []).forEach((role) => {
+      setRoleTags((prev) => {
+        if (!prev.find((r) => r.id === role)) {
+          return [...prev, { id: role, label: role }];
+        }
+        return prev;
+      });
     });
-  }
-
-  // Deduplicate and add roles
-  (mergedFormData.roles || []).forEach((role) => {
-    setRoleTags((prev) => {
-      if (!prev.find((r) => r.id === role)) {
-        return [...prev, { id: role, label: role }];
-      }
-      return prev;
-    });
-  });
-}, [profile]);
-
-
-
+  }, [profile]);
+ 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const avatarFileRef = useRef<File | null>(null);
 
@@ -387,8 +388,7 @@ useEffect(() => {
       result.error.issues.forEach((issue) => {
         const key = issue.path[0] as string;
         // Map Zod messages to friendly ones
-        if (key === "department")
-          fieldErrors[key] = "Please select a title";
+        if (key === "title") fieldErrors[key] = "Please select a title";
         // else if (key === "bio") fieldErrors[key] = "Please enter your bio";
         else if (key === "roles") fieldErrors[key] = "Select at least one role";
         else if (key === "website")
@@ -445,6 +445,8 @@ useEffect(() => {
 
   const getSocialLink = (platform: string): string =>
     formData.socialLinks?.find((link) => link.platform === platform)?.url || "";
+
+ 
 
   // ------------------ RENDER ------------------
   return (
@@ -782,9 +784,9 @@ useEffect(() => {
                                 <TagsItem
                                   key={tag.id}
                                   value={tag.id}
-                                  onSelect={() =>
-                                  {handleDepartmentSelect(tag.id)}
-                                  }
+                                  onSelect={() => {
+                                    handleDepartmentSelect(tag.id);
+                                  }}
                                 >
                                   {tag.label}
                                   {formData.title === tag.id && (

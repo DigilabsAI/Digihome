@@ -1,4 +1,5 @@
 
+import Team4Skeleton from "@/components/skeletons/teamSectionSkeleton";
 import MemberContent from "../AppComponents/memberContent";
 import { Suspense } from "react";
 
@@ -8,9 +9,7 @@ export default function MembersPage() {
       <div className="w-full">
         <div className="max-w-7xl mx-auto ">
           <Suspense
-            fallback={
-              <div className="text-center py-20">Loading members...</div>
-            }
+            fallback={<Team4Skeleton />}
           >
             <MemberContent />
           </Suspense>
