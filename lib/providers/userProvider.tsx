@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import type { User } from "@/lib/types/user";
+import { createClient } from "@/lib/supabase/client";
 
 type UserContextType = {
   user: User | null;
@@ -23,6 +24,13 @@ export function UserProvider({
 
   const [user, setUser] = useState<User | null>(initialUser);
 
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getClaims().then(({ data }) => {
+      setUser(data?.claims?.profile_data ?? null);
+    });
+  }, []);
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}
@@ -31,7 +39,7 @@ export function UserProvider({
 }
 
 export function useUser() {
-  const context = useContext(UserContext); // ✅ value
+  const context = useContext(UserContext); 
 
   if (!context) {
     throw new Error("useUser must be used within UserProvider");

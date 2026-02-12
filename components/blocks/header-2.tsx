@@ -2,9 +2,9 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, easeInOut } from "framer-motion";
-import { Menu, X, Zap } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
-import { APP_NAV_ITEMS, HEADER_BRAND } from "@/public/constants"; // adjust path
+import { APP_NAV_ITEMS, HEADER_BRAND } from "@/public/constants";
 import { ThemeSwitcher } from "./theme-switcher";
 import AvatarDropdown from "./avatarDropdown";
 import { useUser } from "@/lib/providers/userProvider";
@@ -106,39 +106,41 @@ export default function AppHeader() {
               </Link>
             </motion.div>
 
-            <nav className="hidden items-center space-x-1 lg:flex">
-              {APP_NAV_ITEMS.map((item) => (
-                <motion.div
-                  key={item.name}
-                  variants={itemVariants}
-                  className="relative"
-                  onMouseEnter={() => setHoveredItem(item.name)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                >
-                  <Link
-                    prefetch={false}
-                    href={item.href}
-                    className="text-foreground/80 hover:text-foreground relative rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200"
+            {user && user.role !== "non-member" && (
+              <nav className="hidden items-center space-x-1 lg:flex">
+                {APP_NAV_ITEMS.map((item) => (
+                  <motion.div
+                    key={item.name}
+                    variants={itemVariants}
+                    className="relative"
+                    onMouseEnter={() => setHoveredItem(item.name)}
+                    onMouseLeave={() => setHoveredItem(null)}
                   >
-                    {hoveredItem === item.name && (
-                      <motion.div
-                        className="bg-muted absolute inset-0 rounded-lg"
-                        layoutId="navbar-hover"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 30,
-                        }}
-                      />
-                    )}
-                    <span className="relative z-10">{item.name}</span>
-                  </Link>
-                </motion.div>
-              ))}
-            </nav>
+                    <Link
+                      prefetch={false}
+                      href={item.href}
+                      className="text-foreground/80 hover:text-foreground relative rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200"
+                    >
+                      {hoveredItem === item.name && (
+                        <motion.div
+                          className="bg-muted absolute inset-0 rounded-lg"
+                          layoutId="navbar-hover"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 30,
+                          }}
+                        />
+                      )}
+                      <span className="relative z-10">{item.name}</span>
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+            )}
 
             <motion.div
               className="hidden items-center space-x-3 lg:flex"
@@ -146,35 +148,55 @@ export default function AppHeader() {
             >
               {/* <ThemeSwitcher /> */}
 
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <AvatarDropdown />
-              </motion.div>
+              {!user || user.role === "non-member" ? (
+                <Link
+                  prefetch={false}
+                  href="/auth/login"
+                  className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center space-x-2 rounded-lg px-5 py-2.5 text-sm font-medium shadow-sm transition-all duration-200"
+                >
+                  <span>Log in</span>
+                </Link>
+              ) : (
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <AvatarDropdown />
+                </motion.div>
+              )}
             </motion.div>
 
             <div className="flex items-center lg:hidden">
-              <ThemeSwitcher />
-              <motion.button
-                className="text-foreground hover:bg-muted rounded-lg p-2 transition-colors duration-200 lg:hidden"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                variants={itemVariants}
-                whileTap={{ scale: 0.95 }}
-              >
-                {isMobileMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
-              </motion.button>
+              {/* {user && user.role !== "non-member" && <ThemeSwitcher />} */}
+              {!user || user.role === "non-member" ? (
+                <Link
+                  prefetch={false}
+                  href="/auth/login"
+                  className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center space-x-2 rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition-all duration-200"
+                >
+                  <span>Log in</span>
+                </Link>
+              ) : (
+                <motion.button
+                  className="text-foreground hover:bg-muted rounded-lg p-2 transition-colors duration-200 lg:hidden"
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {isMobileMenuOpen ? (
+                    <X className="h-6 w-6" />
+                  ) : (
+                    <Menu className="h-6 w-6" />
+                  )}
+                </motion.button>
+              )}
             </div>
           </div>
         </div>
       </motion.header>
 
       <AnimatePresence>
-        {isMobileMenuOpen && (
+        {isMobileMenuOpen && user && user.role !== "non-member" && (
           <>
             <motion.div
               className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm lg:hidden"
