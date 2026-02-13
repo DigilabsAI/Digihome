@@ -2,7 +2,8 @@ import { InfoIcon } from "lucide-react";
 import ProjectList from "../AppComponents/project-list";
 
 export default function DigilabsProjectsPage() {
-  
+ 
+
   return (
     <div className="flex-1 w-full flex flex-col gap-12 mt-20">
       <div className="w-full">
@@ -12,7 +13,6 @@ export default function DigilabsProjectsPage() {
         </div>
         <ProjectList
           className="max-w-5xl"
-         
           projects={[
             {
               id: "project-1",

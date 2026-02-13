@@ -68,6 +68,8 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { updateRequestStatusAction } from "@/lib/actions/joinFormAction";
+import Loader from "@/components/ui/loader";
 
 /* ---------- Types ---------- */
 type JoinRequest = {
@@ -116,38 +118,6 @@ const getJoinRequests = async ({
   if (error) throw new Error(error.message);
 
   return { data: data ?? [], count: count ?? 0 };
-};
-
-const updateRequestStatus = async ({
-  id,
-  status,
-}: {
-  id: string;
-  status: "approved" | "rejected" | "pending";
-}) => {
-  const supabase = createClient();
-
-  const { data, error } = await supabase
-    .from("organization_join_requests")
-    .update({ status })
-    .eq("id", id)
-    .select("user_id")
-    .single();
-
-  if (error) throw error;
-  if (!data?.user_id) throw new Error("No user_id returned");
-
-  const newRole = status === "approved" ? "member" : "non-member";
-
-  const { error: userError } = await supabase
-    .from("users")
-    .update({ role: newRole })
-    .eq("id", data.user_id)
-    .select();
-    
-    if (userError) console.error("Error updating user role:", userError);
-    if (userError) throw userError;
-  toast.success(`Request ${status}`);
 };
 
 /* ---------- Columns ---------- */
@@ -465,37 +435,57 @@ function RowActions({ row }: { row: Row<JoinRequest> }) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: updateRequestStatus,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["join-requests"] }),
+    mutationFn: updateRequestStatusAction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["join-requests"] });
+      toast.success("Request updated successfully");
+    },
+    onError: (err: any) => {
+      toast.error(err?.message ?? "Something went wrong");
+    },
   });
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button size="icon" variant="ghost">
-          <EllipsisIcon size={16} />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuGroup>
-          <DropdownMenuItem
-            onClick={() => {
-              console.log("Clicked view details for", row.original.id);
-              mutation.mutate({ id: row.original.id, status: "approved" });
-            }}
-          >
-            <Check size={16} /> Approve
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() =>
-              mutation.mutate({ id: row.original.id, status: "rejected" })
-            }
-          >
-            <X size={16} /> Reject
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+    {mutation.isPending && (
+     <Loader/>
+    )}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button size="icon" variant="ghost">
+            <EllipsisIcon size={16} />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              onClick={() => {
+                console.log("Clicked view details for", row.original.id);
+                mutation.mutate({
+                  id: row.original.id,
+                  status: "approved",
+                  email: row.original.email ?? "",
+                  fullname: row.original.full_name,
+                });
+              }}
+            >
+              <Check size={16} /> Approve
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                mutation.mutate({
+                  id: row.original.id,
+                  status: "rejected",
+                  email: row.original.email ?? "",
+                  fullname: row.original.full_name,
+                })
+              }
+            >
+              <X size={16} /> Reject
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 }

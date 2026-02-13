@@ -28,8 +28,8 @@ export async function getCurrentUser() {
   return {
     supabase,
     user,
-    role: data?.role ?? "non-s",
-    isSetupDone: data?.is_setup_done ?? true,
+    role: data?.role,
+    isSetupDone: data?.is_setup_done,
   };
 }
 

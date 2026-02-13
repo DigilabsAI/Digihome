@@ -13,11 +13,7 @@ import {
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -211,9 +207,7 @@ function ProjectCard({
               Archive
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => onDelete(project.id)}
-            >
+            <DropdownMenuItem onClick={() => onDelete(project.id)}>
               <Trash2 className="size-4" />
               Delete
             </DropdownMenuItem>
@@ -311,9 +305,7 @@ function ProjectCard({
                 Archive
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => onDelete(project.id)}
-              >
+              <DropdownMenuItem onClick={() => onDelete(project.id)}>
                 <Trash2 className="size-4" />
                 Delete
               </DropdownMenuItem>
@@ -325,12 +317,28 @@ function ProjectCard({
   );
 }
 
+const handleProjectSelect = (projectId: string) => {
+  console.log("Project selected:", projectId);
+};
+
+const handleProjectCreate = () => {
+  console.log("Create new project");
+};
+
+const handleProjectArchive = async (projectId: string) => {
+  console.log("Archive project:", projectId);
+};
+
+const handleProjectDelete = async (projectId: string) => {
+  console.log("Delete project:", projectId);
+};
+
 export default function ProjectList({
   projects = [],
-  onProjectSelect,
-  onProjectCreate,
-  onProjectArchive,
-  onProjectDelete,
+  onProjectSelect = handleProjectSelect,
+  onProjectCreate = handleProjectCreate,
+  onProjectArchive = handleProjectArchive,
+  onProjectDelete = handleProjectDelete,
   className,
   showSearch = true,
   showFilters = true,
@@ -347,7 +355,7 @@ export default function ProjectList({
       filtered = filtered.filter(
         (project) =>
           project.name.toLowerCase().includes(query) ||
-          project.description?.toLowerCase().includes(query)
+          project.description?.toLowerCase().includes(query),
       );
     }
 
@@ -356,7 +364,7 @@ export default function ProjectList({
     }
 
     return filtered.sort(
-      (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
+      (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime(),
     );
   }, [projects, searchQuery, statusFilter]);
 
@@ -380,12 +388,10 @@ export default function ProjectList({
                 {filteredProjects.length !== 1 ? "s" : ""}
               </CardDescription>
             </div>
-            {onProjectCreate && (
-              <Button onClick={onProjectCreate} type="button">
-                <Plus className="size-4" />
-                New Project
-              </Button>
-            )}
+            <Button onClick={onProjectCreate} type="button">
+              <Plus className="size-4" />
+              New Project
+            </Button>
           </div>
           {showSearch && (
             <InputGroup>
@@ -440,17 +446,13 @@ export default function ProjectList({
                   : "No projects yet"}
               </p>
               <p className="text-muted-foreground text-sm">
-                {onProjectCreate
-                  ? "Create your first project to get started"
-                  : "Projects will appear here"}
+                Create your first project to get started
               </p>
             </div>
-            {onProjectCreate && (
-              <Button onClick={onProjectCreate} type="button" variant="outline">
-                <Plus className="size-4" />
-                Create Project
-              </Button>
-            )}
+            <Button onClick={onProjectCreate} type="button" variant="outline">
+              <Plus className="size-4" />
+              Create Project
+            </Button>
           </div>
         ) : (
           <div
@@ -458,7 +460,7 @@ export default function ProjectList({
               "flex gap-4",
               layout === "grid"
                 ? "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-                : "flex-col"
+                : "flex-col",
             )}
           >
             {filteredProjects.map((project) => (

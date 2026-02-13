@@ -111,7 +111,7 @@ export default function AppHeader() {
                 {APP_NAV_ITEMS.map((item) => (
                   <motion.div
                     key={item.name}
-                    variants={itemVariants}
+                    // variants={itemVariants}
                     className="relative"
                     onMouseEnter={() => setHoveredItem(item.name)}
                     onMouseLeave={() => setHoveredItem(null)}
